@@ -38,6 +38,13 @@ fun GuiItem.lore(text: String): GuiItem {
 	return this
 }
 
+fun GuiItem.lore(lines: MutableList<Component>): GuiItem {
+	val meta = item.itemMeta
+	meta.lore(lines)
+	item.itemMeta = meta
+	return this
+}
+
 fun GuiItem.lore(vararg lines: String): GuiItem {
 	lore(lines.joinToString("\n"))
 	return this
