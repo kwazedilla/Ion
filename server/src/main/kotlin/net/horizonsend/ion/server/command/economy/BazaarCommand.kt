@@ -64,7 +64,6 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.litote.kmongo.and
 import org.litote.kmongo.eq
-import xyz.xenondevs.invui.window.Window
 import kotlin.math.ceil
 
 @CommandAlias("bazaar|shop|playershop")
@@ -495,12 +494,5 @@ object BazaarCommand : SLCommand() {
 	}
 
 	@Subcommand("test")
-	fun onTest(sender: Player) {
-		val normalWindow = Window.single()
-			.setViewer(sender)
-			.setGui(BazaarGui.buildMainMenu(sender))
-			.setTitle("InvUI")
-			.build()
-			.open()
-	}
+	fun onTest(sender: Player) = BazaarGui.openMainMenu(sender)
 }
