@@ -28,6 +28,7 @@ import net.horizonsend.ion.common.utils.text.toCreditComponent
 import net.horizonsend.ion.server.command.GlobalCompletions.fromItemString
 import net.horizonsend.ion.server.command.GlobalCompletions.toItemString
 import net.horizonsend.ion.server.command.SLCommand
+import net.horizonsend.ion.server.features.economy.bazaar.BazaarGui
 import net.horizonsend.ion.server.features.economy.bazaar.Bazaars
 import net.horizonsend.ion.server.features.economy.bazaar.Merchants
 import net.horizonsend.ion.server.features.economy.city.CityNPCs
@@ -63,6 +64,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.litote.kmongo.and
 import org.litote.kmongo.eq
+import xyz.xenondevs.invui.window.Window
 import kotlin.math.ceil
 
 @CommandAlias("bazaar|shop|playershop")
@@ -490,5 +492,15 @@ object BazaarCommand : SLCommand() {
 
 			sender.openPaginatedMenu("Merchant Prices", items)
 		}
+	}
+
+	@Subcommand("test")
+	fun onTest(sender: Player) {
+		val normalWindow = Window.single()
+			.setViewer(sender)
+			.setGui(BazaarGui.buildMainMenu(sender))
+			.setTitle("InvUI")
+			.build()
+			.open()
 	}
 }
