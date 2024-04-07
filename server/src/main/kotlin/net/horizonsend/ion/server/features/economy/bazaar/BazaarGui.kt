@@ -74,7 +74,7 @@ object BazaarGui {
 
 		// attempt to get the planet icon, just use a detonator if unavailable
 		// TODO: When porting over planet icons, change the legacy uranium icon too
-		val item: CustomItem = Space.getPlanet(territory.world)?.planetIcon ?: CustomItems.MINERAL_URANIUM
+		val item: CustomItem = Space.getPlanet(territory.world)?.planetIcon ?: CustomItems.BATTERY_LARGE
 
 		return AsyncItem {
 			val remote: Boolean = Regions.findFirstOf<RegionTerritory>(player.location)?.id != territoryId
