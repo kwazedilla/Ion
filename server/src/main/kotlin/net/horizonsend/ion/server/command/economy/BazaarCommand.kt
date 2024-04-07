@@ -24,6 +24,7 @@ import net.horizonsend.ion.common.utils.text.formatPaginatedMenu
 import net.horizonsend.ion.common.utils.text.lineBreak
 import net.horizonsend.ion.common.utils.text.ofChildren
 import net.horizonsend.ion.common.utils.text.template
+import net.horizonsend.ion.common.utils.text.toComponent
 import net.horizonsend.ion.common.utils.text.toCreditComponent
 import net.horizonsend.ion.server.command.GlobalCompletions.fromItemString
 import net.horizonsend.ion.server.command.GlobalCompletions.toItemString
@@ -392,7 +393,7 @@ object BazaarCommand : SLCommand() {
 
 			val searchButton = guiButton(Material.NAME_TAG) {
 				Tasks.sync {
-					sender.input("Enter Item Name") { _, input ->
+					sender.input("Enter Item Name".toComponent()) { _, input ->
 						val searchBackButton = guiButton(Material.IRON_DOOR) {
 							Tasks.sync {
 								onBrowse(sender)

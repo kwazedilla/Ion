@@ -7,6 +7,7 @@ import com.github.stefvanschie.inventoryframework.pane.OutlinePane
 import com.github.stefvanschie.inventoryframework.pane.PaginatedPane
 import com.github.stefvanschie.inventoryframework.pane.Pane
 import com.github.stefvanschie.inventoryframework.pane.StaticPane
+import net.horizonsend.ion.common.utils.text.toComponent
 import net.horizonsend.ion.server.features.nations.gui.input
 import net.horizonsend.ion.server.features.nations.gui.playerClicker
 import net.kyori.adventure.text.Component
@@ -85,7 +86,7 @@ object MenuHelper {
 		val searchBackButton = backButton(text = backButtonText, back = searchBackFunction)
 
 		Tasks.sync {
-			playerClicker.input(searchInputText) { _, input ->
+			playerClicker.input(searchInputText.toComponent()) { _, input ->
 				Tasks.async {
 					val items: List<GuiItem> = searchFunction.invoke(input)
 
