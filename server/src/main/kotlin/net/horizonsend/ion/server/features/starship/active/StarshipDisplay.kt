@@ -56,11 +56,11 @@ object StarshipDisplay : IonServerComponent(true) {
 	/** Stores the StarshipIcon for use in populating the map */
 	private fun createMarker(starship: ActiveStarship, marker: MarkerIcon? = null) {
 		val charIdentifier = starship.charIdentifier
-		val displayName = starship.identifier
+		val displayName = "Unknown" //starship.identifier
 
-		val markerIcon = marker
+		val markerIcon = /*marker
 			?: markerAPI.getMarkerIcon(starship.type.dynmapIcon)
-			?: markerAPI.getMarkerIcon("anchor")
+			?: */markerAPI.getMarkerIcon("anchor")
 
 		val isInHyperspace = Hyperspace.isMoving(starship)
 
@@ -103,11 +103,11 @@ object StarshipDisplay : IonServerComponent(true) {
 		val hyperspaceMessage = if (hyperspace) "<h2 style=\"text-align:center;\">Hyperspace Echo</h2>\n" else ""
 
 		return """
-			<h1 style="$colorCSS;text-align:center;">$starshipDisplayName</h1>
+			<h1 style="$colorCSS;text-align:center;">Unknown</h1>
 			$hyperspaceMessage
-			<h3><b>Type:</b> $type</h3>
-			<h3><b>Pilot:</b> $pilotNamePlain</h3>
-			<h3><b>Size:</b> $blockCount</h3>
+			<h3><b>Type:</b> Unknown</h3>
+			<h3><b>Pilot:</b> Unknown</h3>
+			<h3><b>Size:</b> Unknown</h3>
 			<h3><b>Location:</b> $location</h3>
 		""".trimIndent()
 	}

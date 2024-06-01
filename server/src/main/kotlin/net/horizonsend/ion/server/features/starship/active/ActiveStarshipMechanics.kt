@@ -267,7 +267,7 @@ object ActiveStarshipMechanics : IonServerComponent() {
 		val isNoStarship = starship == null
 		val isHoldingController = isHoldingController(player)
 		val isInvisible = isNoStarship && !isHoldingController
-		DynmapPlugin.plugin.assertPlayerInvisibility(player, isInvisible, IonServer)
+		DynmapPlugin.plugin.assertPlayerInvisibility(player, true, IonServer)
 	}
 
 	private fun updateGlowing(player: Player, starship: ActiveControlledStarship?) {
