@@ -25,7 +25,8 @@ data class StarshipTypeBalancing(
 		maxSneakFlyAccel = 3,
 		interdictionRange = 10,
 		hyperspaceRangeMultiplier = 3.0,
-		shieldPowerMultiplier = 1.0
+		shieldPowerMultiplier = 1.0,
+		detectionRange = 900
 	),
 
 	val shuttle: StarshipBalancing = StarshipBalancing(
@@ -33,14 +34,16 @@ data class StarshipTypeBalancing(
 		maxSneakFlyAccel = 2,
 		interdictionRange = 300,
 		hyperspaceRangeMultiplier = 1.2,
-		shieldPowerMultiplier = 1.0
+		shieldPowerMultiplier = 1.0,
+		detectionRange = 1200
 	),
 	val transport: StarshipBalancing = StarshipBalancing(
 		sneakFlyAccelDistance = 10,
 		maxSneakFlyAccel = 3,
 		interdictionRange = 600,
 		hyperspaceRangeMultiplier = 1.25,
-		shieldPowerMultiplier = 1.0
+		shieldPowerMultiplier = 1.0,
+		detectionRange = 2400
 	),
 	val lightFreighter: StarshipBalancing = StarshipBalancing(
 		sneakFlyAccelDistance = 10,
@@ -48,6 +51,7 @@ data class StarshipTypeBalancing(
 		interdictionRange = 900,
 		hyperspaceRangeMultiplier = 1.3,
 		shieldPowerMultiplier = 1.0,
+        detectionRange = 3600,
 		weapons = StarshipWeapons(
 			lightTurret = StarshipWeapons.StarshipWeapon(
 				range = 200.0,
@@ -79,14 +83,16 @@ data class StarshipTypeBalancing(
 		maxSneakFlyAccel = 3,
 		interdictionRange = 1200,
 		hyperspaceRangeMultiplier = 1.35,
-		shieldPowerMultiplier = 1.0
+		shieldPowerMultiplier = 1.0,
+		detectionRange = 4800
 	),
 	val heavyFreighter: StarshipBalancing = StarshipBalancing(
 		sneakFlyAccelDistance = 10,
 		maxSneakFlyAccel = 3,
 		interdictionRange = 1500,
 		hyperspaceRangeMultiplier = 1.4,
-		shieldPowerMultiplier = 1.0
+		shieldPowerMultiplier = 1.0,
+		detectionRange = 6000
 	),
 
 	val starfighter: StarshipBalancing = StarshipBalancing(
@@ -94,7 +100,8 @@ data class StarshipTypeBalancing(
 		maxSneakFlyAccel = 4,
 		interdictionRange = 10,
 		hyperspaceRangeMultiplier = 1.5,
-		shieldPowerMultiplier = 1.0
+		shieldPowerMultiplier = 1.0,
+		detectionRange = 1200
 	),
 	val gunship: StarshipBalancing = StarshipBalancing(
 		sneakFlyAccelDistance = 5,
@@ -102,6 +109,7 @@ data class StarshipTypeBalancing(
 		interdictionRange = 1200,
 		hyperspaceRangeMultiplier = 1.6,
 		shieldPowerMultiplier = 1.0,
+		detectionRange = 2400,
 		weapons = StarshipWeapons(
 			lightTurret = StarshipWeapons.StarshipWeapon(
 				range = 200.0,
@@ -157,6 +165,7 @@ data class StarshipTypeBalancing(
 		interdictionRange = 1800,
 		hyperspaceRangeMultiplier = 1.7,
 		shieldPowerMultiplier = 1.0,
+		detectionRange = 3600,
 		weapons = StarshipWeapons(
 			lightTurret = StarshipWeapons.StarshipWeapon(
 				range = 200.0,
@@ -234,6 +243,7 @@ data class StarshipTypeBalancing(
 		interdictionRange = 2400,
 		hyperspaceRangeMultiplier = 1.8,
 		shieldPowerMultiplier = 1.0,
+		detectionRange = 4800,
 		weapons = StarshipWeapons(
 			pulseCannon = StarshipWeapons.StarshipWeapon(
 				canFire = false,
@@ -266,7 +276,8 @@ data class StarshipTypeBalancing(
 		maxSneakFlyAccel = 3,
 		interdictionRange = 3000,
 		hyperspaceRangeMultiplier = 1.9,
-		shieldPowerMultiplier = 1.0
+		shieldPowerMultiplier = 1.0,
+		detectionRange = 6000
 	),
 	val cruiser: StarshipBalancing = StarshipBalancing(
 		sneakFlyAccelDistance = 5,
@@ -275,6 +286,7 @@ data class StarshipTypeBalancing(
 		hyperspaceRangeMultiplier = 1.9,
 		cruiseSpeedMultiplier = 0.98,
 		shieldPowerMultiplier = 1.10,
+        detectionRange = 7200,
 		weapons = StarshipWeapons(
 			ionTurret = StarshipWeapons.StarshipWeapon(
 				canFire = true,
@@ -376,6 +388,7 @@ data class StarshipTypeBalancing(
 		hyperspaceRangeMultiplier = 2.5,
 		cruiseSpeedMultiplier = 0.88,
 		shieldPowerMultiplier = 1.60,
+		detectionRange = 8400,
 		weapons = StarshipWeapons(
 			quadTurret = StarshipWeapons.StarshipWeapon(
 				canFire = true,
@@ -477,6 +490,7 @@ data class StarshipTypeBalancing(
 		hyperspaceRangeMultiplier = 3.0,
 		cruiseSpeedMultiplier = 0.88,
 		shieldPowerMultiplier = 1.30,
+		detectionRange = 8400,
 		weapons = StarshipWeapons(
 
 			triTurret = StarshipWeapons.StarshipWeapon(
@@ -552,6 +566,7 @@ data class StarshipTypeBalancing(
 		hyperspaceRangeMultiplier = 2.75,
 		cruiseSpeedMultiplier = 0.80,
 		shieldPowerMultiplier = 1.75,
+        detectionRange = 9600,
 		weapons = StarshipWeapons(
 			quadTurret = StarshipWeapons.StarshipWeapon(
 				canFire = true,
@@ -633,6 +648,7 @@ data class StarshipTypeBalancing(
 		hyperspaceRangeMultiplier = 3.0,
 		cruiseSpeedMultiplier = 0.70,
 		shieldPowerMultiplier = 2.0,
+        detectionRange = 10800,
 		weapons = StarshipWeapons(
 			quadTurret = StarshipWeapons.StarshipWeapon(
 				canFire = true,
@@ -719,6 +735,7 @@ data class StarshipTypeBalancing(
 		maxSneakFlyAccel = 4,
 		interdictionRange = 600,
 		hyperspaceRangeMultiplier = 1.5,
+		detectionRange = 1200,
 		weapons = StarshipWeapons(
 			pulseCannon = StarshipWeapons.StarshipWeapon(
 				range = 180.0,
@@ -751,6 +768,7 @@ data class StarshipTypeBalancing(
 		maxSneakFlyAccel = 5,
 		interdictionRange = 1800,
 		hyperspaceRangeMultiplier = 1.7,
+		detectionRange = 3600,
 		weapons = corvette.weapons
 	),
 	val aiFrigate: StarshipBalancing = frigate,
@@ -764,14 +782,16 @@ data class StarshipTypeBalancing(
 		sneakFlyAccelDistance = 0,
 		maxSneakFlyAccel = 0,
 		interdictionRange = 0,
-		hyperspaceRangeMultiplier = 0.0
+		hyperspaceRangeMultiplier = 0.0,
+		detectionRange = 10800
 	),
 	val eventShipBalancing: StarshipBalancing = StarshipBalancing(
 		sneakFlyAccelDistance = 10,
 		maxSneakFlyAccel = 3,
 		interdictionRange = 2000,
 		hyperspaceRangeMultiplier = 10.0,
-		shieldPowerMultiplier = 2.0
+		shieldPowerMultiplier = 2.0,
+		detectionRange = 10800
 	),
 )
 
@@ -804,6 +824,7 @@ data class StarshipBalancing(
 	val hyperspaceRangeMultiplier: Double,
 	val cruiseSpeedMultiplier: Double = 1.0,
 	val shieldPowerMultiplier: Double = 1.0,
+	val detectionRange: Int,
 
 	val requiredMultiblocks: List<RequiredSubsystemInfo> = listOf(),
 	val sounds: StarshipSounds = StarshipSounds()

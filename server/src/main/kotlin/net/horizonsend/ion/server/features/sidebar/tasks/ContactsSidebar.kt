@@ -393,7 +393,8 @@ object ContactsSidebar {
                 ContactsColoring.BY_RELATION.ordinal -> distanceColor(distance)
                 else -> playerRelationColor(player, otherController)
             }
-            val name = text(nameString, color)
+            val isInDetectionRange = starship.balancing.detectionRange > distance
+            val name = text(if (isInDetectionRange) nameString else "Unknown Starship".take(maxLength), color)
 
             val fleet = Fleets.findByMember(player)
             val otherPlayer = if (otherController is ActivePlayerController) otherController.player else null
@@ -405,7 +406,10 @@ object ContactsSidebar {
                     type = ContactsType.STARSHIP,
                     relation = playerRelationType(player, otherController),
                     priority = priority,
-                    prefix = constructPrefixTextComponent(starship.type.icon, prefixColor),
+                    prefix = constructPrefixTextComponent(
+                        if (isInDetectionRange) starship.type.icon else GENERIC_STARSHIP_ICON.text,
+                        if (isInDetectionRange) playerRelationColor(player, otherController) else GRAY
+                    ),
                     suffix = constructSuffixTextComponent(
                         if (currentStarship != null) {
                             autoTurretTextComponent(currentStarship, starship)
