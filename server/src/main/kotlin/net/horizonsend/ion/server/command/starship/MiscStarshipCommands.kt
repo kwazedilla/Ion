@@ -576,6 +576,7 @@ object MiscStarshipCommands : net.horizonsend.ion.server.command.SLCommand() {
 		player.alert("You were ejected from the starship")
 	}
 
+	/*
 	@Suppress("unused")
 	@CommandAlias("listships")
 	@CommandCompletion("ai|player|all")
@@ -642,6 +643,7 @@ object MiscStarshipCommands : net.horizonsend.ion.server.command.SLCommand() {
 		sender.sendMessage(ofChildren(text("Total Ships", HE_MEDIUM_GRAY), text(": ", HE_DARK_GRAY), text(totalShips, HE_LIGHT_BLUE)))
 		sender.sendMessage(ofChildren(text("Total Blocks in all ships", HE_MEDIUM_GRAY), text(": ", HE_DARK_GRAY), text(totalBlocks, HE_LIGHT_BLUE)))
 	}
+	 */
 
 	@Suppress("unused")
 	@CommandAlias("usebeacon")
