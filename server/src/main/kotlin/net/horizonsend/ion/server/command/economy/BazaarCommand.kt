@@ -36,7 +36,7 @@ import net.horizonsend.ion.server.features.economy.city.CityNPCs
 import net.horizonsend.ion.server.features.economy.city.TradeCities
 import net.horizonsend.ion.server.features.economy.city.TradeCityData
 import net.horizonsend.ion.server.features.economy.city.TradeCityType
-import net.horizonsend.ion.server.features.nations.gui.input
+import net.horizonsend.ion.server.features.nations.gui.anvilInput
 import net.horizonsend.ion.server.features.nations.gui.playerClicker
 import net.horizonsend.ion.server.features.nations.region.Regions
 import net.horizonsend.ion.server.features.nations.region.types.RegionTerritory
@@ -393,7 +393,7 @@ object BazaarCommand : SLCommand() {
 
 			val searchButton = guiButton(Material.NAME_TAG) {
 				Tasks.sync {
-					sender.input("Enter Item Name".toComponent()) { _, input ->
+					sender.anvilInput("Enter Item Name".toComponent()) { _, input ->
 						val searchBackButton = guiButton(Material.IRON_DOOR) {
 							Tasks.sync {
 								onBrowse(sender)
