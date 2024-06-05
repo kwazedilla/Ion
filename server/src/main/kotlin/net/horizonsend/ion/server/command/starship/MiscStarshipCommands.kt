@@ -64,6 +64,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.Component.newline
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.NamedTextColor.RED
 import net.kyori.adventure.text.format.NamedTextColor.WHITE
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -160,7 +161,7 @@ object MiscStarshipCommands : net.horizonsend.ion.server.command.SLCommand() {
 		val selectedPlanetData = PlanetSpaceRendering.planetSelectorDataMap[sender.uniqueId]
 		if (selectedPlanetData != null) {
 			// player is looking at a planet in their HUD
-			onJump(sender, selectedPlanetData.name, null)
+			onJump(sender, selectedPlanetData.name, null, "false")
 		} else {
 			sender.userError("Invalid destination. Type /jump while looking at a planet, or /jump <planet>, /jump <hyperspace gate> or /jump <x> <z>")
 		}
@@ -170,7 +171,7 @@ object MiscStarshipCommands : net.horizonsend.ion.server.command.SLCommand() {
 	@CommandAlias("jump")
 	@CommandCompletion("x|z")
 	@Description("Jump to a set of coordinates, a hyperspace beacon, or a planet")
-	fun onJump(sender: Player, xCoordinate: String, zCoordinate: String, @Optional hyperdriveTier: Int?) {
+	fun onJump(sender: Player, xCoordinate: String, zCoordinate: String, @Optional hyperdriveTier: Int?, @Optional force: String?) {
 		val starship: ActiveControlledStarship = getStarshipPiloting(sender)
 
 		val navComp: NavCompSubsystem = Hyperspace.findNavComp(starship) ?: fail { "Intact nav computer not found!" }
@@ -180,7 +181,9 @@ object MiscStarshipCommands : net.horizonsend.ion.server.command.SLCommand() {
 		val x = parseNumber(xCoordinate, starship.centerOfMass.x)
 		val z = parseNumber(zCoordinate, starship.centerOfMass.z)
 
-		tryJump(starship, x, z, starship.world, maxRange, sender, hyperdriveTier)
+		val forceBool = force.equals("true", ignoreCase = true)
+
+		tryJump(starship, x, z, starship.world, maxRange, sender, hyperdriveTier, forceBool)
 	}
 
 	fun parseNumber(string: String, originCoord: Int): Int = when {
@@ -195,7 +198,7 @@ object MiscStarshipCommands : net.horizonsend.ion.server.command.SLCommand() {
 	@CommandAlias("jump")
 	@CommandCompletion("auto|@planetsInWorld|@hyperspaceGatesInWorld")
 	@Description("Jump to a set of coordinates, a hyperspace beacon, or a planet")
-	fun onJump(sender: Player, destination: String, @Optional hyperdriveTier: Int?) {
+	fun onJump(sender: Player, destination: String, @Optional hyperdriveTier: Int?, @Optional force: String?) {
 		val starship: ActiveControlledStarship = getStarshipPiloting(sender)
 
 		val navComp: NavCompSubsystem = Hyperspace.findNavComp(starship) ?: fail { "Intact nav computer not found!" }
@@ -203,6 +206,8 @@ object MiscStarshipCommands : net.horizonsend.ion.server.command.SLCommand() {
 			(navComp.multiblock.baseRange * starship.balancing.hyperspaceRangeMultiplier).roundToInt()
 
 		if (Hyperspace.isWarmingUp(starship)) fail { "Starship is already warming up!" }
+
+		val forceBool = force.equals("true", ignoreCase = true)
 
 		if (destination == "auto") {
 			val playerPath = WaypointManager.playerPaths[sender.uniqueId]
@@ -215,7 +220,7 @@ object MiscStarshipCommands : net.horizonsend.ion.server.command.SLCommand() {
 			}
 			val x = playerPath.first().edgeList.first().target.loc.x.toInt()
 			val z = playerPath.first().edgeList.first().target.loc.z.toInt()
-			tryJump(starship, x, z, starship.world, maxRange, sender, hyperdriveTier)
+			tryJump(starship, x, z, starship.world, maxRange, sender, hyperdriveTier, forceBool)
 			return
 		}
 
@@ -247,7 +252,7 @@ object MiscStarshipCommands : net.horizonsend.ion.server.command.SLCommand() {
 		val x = destinationPos.x
 		val z = destinationPos.z
 
-		tryJump(starship, x, z, starship.world, maxRange, sender, hyperdriveTier)
+		tryJump(starship, x, z, starship.world, maxRange, sender, hyperdriveTier, forceBool)
 	}
 
 	private fun tryJump(
@@ -257,7 +262,8 @@ object MiscStarshipCommands : net.horizonsend.ion.server.command.SLCommand() {
 		destinationWorld: World,
 		maxRange: Int,
 		sender: Player,
-		tier: Int?
+		tier: Int?,
+		force: Boolean
 	) {
 		val hyperdrive: HyperdriveSubsystem = tier?.let { Hyperspace.findHyperdrive(starship, tier) }
 			?: Hyperspace.findHyperdrive(starship) ?: fail {
@@ -310,7 +316,7 @@ object MiscStarshipCommands : net.horizonsend.ion.server.command.SLCommand() {
 
 			val message = text()
 				.color(NamedTextColor.GRAY)
-				.append(text("Starship is within a gravity well; jump aborted. Move away from the gravity well source:", NamedTextColor.RED))
+				.append(text("Starship is within a gravity well; jump aborted. Move away from the gravity well source:", RED))
 				.append(newline())
 				.append(text("Object: "))
 				.append(massShadowInfo.description)
@@ -329,6 +335,40 @@ object MiscStarshipCommands : net.horizonsend.ion.server.command.SLCommand() {
 				.append(text(" (${(atan2(escapeVector.z, escapeVector.x) * 180 / PI).toInt()})", WHITE))
 
 			starship.sendMessage(message)
+			return
+		}
+
+		val checkMassShadowInfo = MassShadows.check(
+			starship.world,
+			starship.centerOfMass.x.toDouble(),
+			starship.centerOfMass.z.toDouble(),
+			x.toDouble(),
+			z.toDouble()
+		)
+
+		if (checkMassShadowInfo != null && !force) {
+			val message = ofChildren(
+				text("Starship may be intercepted by a gravity well; jump aborted. If you continue to jump, " +
+						"your ship may be caught by the gravity well and exit hyperspace before you reach your " +
+						"destination. Do you wish to continue?", RED
+				),
+				newline(),
+				text("Object: "),
+				checkMassShadowInfo.description,
+				newline(),
+				text("Location: "),
+				text("${checkMassShadowInfo.x}, ${checkMassShadowInfo.z}", WHITE),
+				newline(),
+				text("Gravity well radius: "),
+				text(checkMassShadowInfo.radius, WHITE),
+				newline()
+			)
+
+			val richMessageString = "<red>Do you wish to continue jumping to hyperspace? " +
+					"<gold><italic><hover:show_text:'<gray>/jump $x $z $tier true'>" +
+					"<click:run_command:/jump $x $z $tier true>[Continue hyperspace jump]</click>"
+			starship.sendMessage(message)
+			starship.sendMessage(net.kyori.adventure.text.minimessage.MiniMessage.miniMessage().deserialize(richMessageString))
 			return
 		}
 
@@ -632,7 +672,8 @@ object MiscStarshipCommands : net.horizonsend.ion.server.command.SLCommand() {
 				other.bukkitWorld(),
 				Int.MAX_VALUE,
 				sender,
-				null
+				null,
+				true
 			)
 			ship.beacon = null
 		} else {
