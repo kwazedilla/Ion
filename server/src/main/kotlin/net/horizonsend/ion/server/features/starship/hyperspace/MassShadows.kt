@@ -94,6 +94,7 @@ object MassShadows {
 		for (planet in Space.getPlanets()) {
 			if (planet.spaceWorld != realWorld) continue
 
+			println("check: Checking ${planet.name}")
 			val loc = planet.location
 
 			if (checkIntersect(x0, z0, x1, z1, loc.x.toDouble(), loc.z.toDouble(), PLANET_RADIUS)) {
@@ -104,6 +105,7 @@ object MassShadows {
 		for (star in Space.getStars()) {
 			if (star.spaceWorld != realWorld) continue
 
+			println("check: Checking ${star.name}")
 			val loc = star.location
 
 			if (checkIntersect(x0, z0, x1, z1, loc.x.toDouble(), loc.z.toDouble(), STAR_RADIUS)) {
@@ -111,6 +113,7 @@ object MassShadows {
 			}
 		}
 
+		println("check: fell through")
 		return null
 	}
 
@@ -128,11 +131,19 @@ object MassShadows {
 		// y = mx + int -> ax + by + c = 0
 		// a = -m, b = 1, c = -int
 		val slope = (z1 - z0) / (x1 - x0)
-		val zIntercept = z1 - (slope * x0)
+		val zIntercept = z1 - (slope * x1)
+		println("checkIntercept: $x0 $z0 $x1 $z1 $xp $zp $radius")
+		println("checkIntercept: $slope $zIntercept")
 
 		// (ax + by + c) / sqrt(a^2 + b^2)
 		val dist = (abs(-slope * xp + zp - zIntercept)) / sqrt(slope * slope + 1)
 
-		return if (radius >= dist) true else false
+		return if (radius >= dist) {
+			println("checkIntercept: TRUE $dist")
+			true
+		} else {
+			println("checkIntercept: FALSE $dist")
+			false
+		}
 	}
 }

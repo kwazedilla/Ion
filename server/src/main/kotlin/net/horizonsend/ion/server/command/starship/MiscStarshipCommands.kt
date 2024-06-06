@@ -353,20 +353,20 @@ object MiscStarshipCommands : net.horizonsend.ion.server.command.SLCommand() {
 						"destination. Do you wish to continue?", RED
 				),
 				newline(),
-				text("Object: "),
+				text("Object: ", NamedTextColor.GRAY),
 				checkMassShadowInfo.description,
 				newline(),
-				text("Location: "),
+				text("Location: ", NamedTextColor.GRAY),
 				text("${checkMassShadowInfo.x}, ${checkMassShadowInfo.z}", WHITE),
 				newline(),
-				text("Gravity well radius: "),
+				text("Gravity well radius: ", NamedTextColor.GRAY),
 				text(checkMassShadowInfo.radius, WHITE),
 				newline()
 			)
 
 			val richMessageString = "<red>Do you wish to continue jumping to hyperspace? " +
-					"<gold><italic><hover:show_text:'<gray>/jump $x $z $tier true'>" +
-					"<click:run_command:/jump $x $z $tier true>[Continue hyperspace jump]</click>"
+					"<gold><italic><hover:show_text:'<gray>/jump $x $z ${hyperdrive.multiblock.hyperdriveClass} true'>" +
+					"<click:run_command:/jump $x $z ${hyperdrive.multiblock.hyperdriveClass} true>[Continue hyperspace jump]</click>"
 			starship.sendMessage(message)
 			starship.sendMessage(net.kyori.adventure.text.minimessage.MiniMessage.miniMessage().deserialize(richMessageString))
 			return
