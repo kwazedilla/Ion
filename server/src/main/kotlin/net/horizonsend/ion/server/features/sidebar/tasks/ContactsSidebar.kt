@@ -408,7 +408,7 @@ object ContactsSidebar {
                     priority = priority,
                     prefix = constructPrefixTextComponent(
                         if (isInDetectionRange) starship.type.icon else GENERIC_STARSHIP_ICON.text,
-                        if (isInDetectionRange) playerRelationColor(player, otherController) else GRAY
+                        if (isInDetectionRange) prefixColor else GRAY
                     ),
                     suffix = constructSuffixTextComponent(
                         if (currentStarship != null) {
