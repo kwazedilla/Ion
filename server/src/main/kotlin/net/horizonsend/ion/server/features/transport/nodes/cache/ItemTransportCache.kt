@@ -187,6 +187,11 @@ class ItemTransportCache(override val holder: CacheHolder<ItemTransportCache>): 
 
 				key to invs[key]!!
 			}
+			transaction.addAnimation(
+				reference,
+				destinationInventories,
+				singletonItem
+			)
 		}
 
 		Tasks.sync {
