@@ -5,7 +5,7 @@ import net.horizonsend.ion.server.features.multiblock.type.starship.weapon.event
 import net.horizonsend.ion.server.features.nations.gui.skullItem
 import net.horizonsend.ion.server.features.starship.Starship
 import net.horizonsend.ion.server.features.starship.damager.Damager
-import net.horizonsend.ion.server.features.starship.subsystem.weapon.projectile.ItemDisplayContainer
+import net.horizonsend.ion.server.features.starship.subsystem.weapon.projectile.ItemDisplayWrapper
 import net.horizonsend.ion.server.features.starship.subsystem.weapon.projectile.TrackingLaserProjectile
 import net.kyori.adventure.text.Component
 import org.bukkit.Color
@@ -37,12 +37,14 @@ class AbyssalGazeProjectile(
 	override val maxDegrees: Double = 10.0
 	override val particleThickness: Double = 0.0
 
-	private val container = ItemDisplayContainer(
+	private val container = ItemDisplayWrapper(
 		starship.world,
-		1.5F,
 		loc.toVector(),
 		dir,
-		skullItem("skull", UUID.fromString("bf8c1907-b235-4152-84bb-a5f28b58f89c"), "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmFmMGJjNGEyMzdiZDIwMTZjZDdlOWZhMGExNWM5ZWY3MjJlMDc5OTcwODU0NTJkNjVmM2U4ZmFkODZjM2JkNSJ9fX0=")
+		Vector(),
+		0,
+		skullItem("skull", UUID.fromString("bf8c1907-b235-4152-84bb-a5f28b58f89c"), "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmFmMGJjNGEyMzdiZDIwMTZjZDdlOWZhMGExNWM5ZWY3MjJlMDc5OTcwODU0NTJkNjVmM2U4ZmFkODZjM2JkNSJ9fX0="),
+		Vector(1.5f, 1.5f, 1.5f,)
 	)
 
 	override fun onDespawn() {

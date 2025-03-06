@@ -190,7 +190,7 @@ class ItemTransportCache(override val holder: CacheHolder<ItemTransportCache>): 
 			transaction.addAnimation(
 				reference,
 				destinationInventories,
-				singletonItem
+				singletonItem.clone()
 			)
 		}
 
