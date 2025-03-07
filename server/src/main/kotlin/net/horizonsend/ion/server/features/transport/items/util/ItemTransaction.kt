@@ -4,6 +4,8 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectRBTreeMap
 import net.horizonsend.ion.server.features.starship.subsystem.weapon.projectile.ItemDisplayWrapper
 import net.horizonsend.ion.server.miscellaneous.utils.Tasks
 import net.horizonsend.ion.server.miscellaneous.utils.coordinates.BlockKey
+import net.horizonsend.ion.server.miscellaneous.utils.coordinates.toVec3i
+import org.bukkit.World
 import org.bukkit.craftbukkit.inventory.CraftInventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Vector
@@ -21,81 +23,42 @@ class ItemTransaction {
 		transactions += BackedItemTransaction(sourceReference, transferredItem, transferredAmount, destinationInventories, destinationSelector)
 	}
 
-	fun addAnimation(
-		sourceReference: ItemReference,
+	fun playTransferAnimation(
+		originKey: BlockKey,
+		world: World,
 		destinationInventories: Long2ObjectRBTreeMap<CraftInventory>,
 		transferredItem: ItemStack,
+		tickDelay: Long,
 	) {
-		val originLocation = sourceReference.inventory.location ?: return
-		val itemDisplayWrapper = ItemDisplayWrapper(
-			world = originLocation.world,
-			initPosition = originLocation.toCenterLocation().toVector(),
-			initHeading = Vector(),
-			initTransformation = Vector(),
-			initInterpolationDuration = 10,
-			item = transferredItem,
-			initScale = Vector(0.75, 0.75, 0.75)
-		)
-		itemDisplayWrapper.update()
+		val originVector = toVec3i(originKey)
+		val originLocation = originVector.toLocation(world)
 
-		// Notes: 1L delay seems to result in very inconsistent animations (specifically the lack of animations).
-		// 2L may be the minimum to guarantee offset interpolation.
-		Tasks.asyncDelay(2L) {
-			val firstDestination = destinationInventories.firstEntry().value.location
-			if (firstDestination != null) {
-				itemDisplayWrapper.offset = firstDestination.toCenterLocation().toVector().subtract(originLocation.toCenterLocation().toVector())
-				itemDisplayWrapper.update()
-			}
-			/*
-			itemDisplayWrapper.offset = itemDisplayWrapper.offset.clone().add(Vector(0, 5, 0))
-			itemDisplayWrapper.update()
-			 */
-		}
-
-		Tasks.syncDelay(20L) {
-			itemDisplayWrapper.remove()
-		}
-
-		/*
-		val players = originLocation.world.players
-		for (player in players) {
-			val entity = ClientDisplayEntityFactory.createItemDisplay(player)
-			entity.setItemStack(transferredItem)
-			entity.viewRange = 5.0f
-			entity.interpolationDuration = 10
-			entity.interpolationDelay = 0
-			entity.transformation = Transformation(
-				Vector3f(),
-				Quaternionf(),
-				Vector3f(0.75f),
-				Quaternionf()
+		for (destinationInventory in destinationInventories) {
+			val itemDisplayWrapper = ItemDisplayWrapper(
+				world = originLocation.world,
+				initPosition = originLocation.toCenterLocation().toVector(),
+				initHeading = Vector(),
+				initTransformation = Vector(),
+				initInterpolationDuration = 10,
+				item = transferredItem,
+				initScale = Vector(0.75, 0.75, 0.75)
 			)
-			val nmsEntity = entity.getNMSData(originLocation.x + 0.5, originLocation.y + 0.5, originLocation.z + 0.5)
+			itemDisplayWrapper.update()
 
-			Tasks.sync {
-				ClientDisplayEntities.sendEntityPacket(player, nmsEntity, 20L)
-			}
-
-			val firstDestinationLocation = destinationInventories.firstEntry().value.location
-			if (firstDestinationLocation != null) {
-				val offset = Vector3f(
-					(firstDestinationLocation.x - originLocation.x).toFloat(),
-					(firstDestinationLocation.y - originLocation.y).toFloat(),
-					(firstDestinationLocation.z - originLocation.z).toFloat()
-				)
-				val transformation = com.mojang.math.Transformation(
-					offset,
-					Quaternionf(),
-					Vector3f(0.75f),
-					Quaternionf()
-				)
-
-				Tasks.syncDelayTask(1L) {
-					ClientDisplayEntities.transformDisplayEntityPacket(player, nmsEntity, transformation)
+			// Notes: 1L delay seems to result in very inconsistent animations (specifically the lack of animations).
+			// 2L may be the minimum to guarantee offset interpolation.
+			Tasks.asyncDelay(2L + tickDelay) {
+				val destinationLocation = destinationInventory.value.location
+				if (destinationLocation != null) {
+					itemDisplayWrapper.offset = destinationLocation.toCenterLocation().toVector().subtract(originLocation.toCenterLocation().toVector())
+					itemDisplayWrapper.update()
 				}
 			}
+
+			Tasks.syncDelay(20L + tickDelay) {
+				itemDisplayWrapper.remove()
+			}
 		}
-		 */
 	}
 
 	fun commit() {

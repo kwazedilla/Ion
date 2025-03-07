@@ -68,14 +68,20 @@ class ItemTransportCache(override val holder: CacheHolder<ItemTransportCache>): 
 
 		val destinationInvCache = mutableMapOf<BlockKey, CraftInventory>()
 
-		for ((item, itemReferences) in references) transferItemType(
-			location,
-			originNode,
-			meta,
-			item,
-			destinationInvCache,
-			itemReferences
-		)
+		var animationTick = 0L
+		for ((item, itemReferences) in references) {
+			transferItemType(
+				location,
+				originNode,
+				meta,
+				item,
+				destinationInvCache,
+				itemReferences,
+				animationTick
+			)
+
+			animationTick++
+		}
 	}
 
 	private fun getTransferDestinations(
@@ -148,6 +154,7 @@ class ItemTransportCache(override val holder: CacheHolder<ItemTransportCache>): 
 		singletonItem: ItemStack,
 		destinationInvCache: MutableMap<BlockKey, CraftInventory>,
 		availableItemReferences: ArrayDeque<ItemReference>,
+		animationTick: Long
 	) {
 		val destinations: List<PathfindingNodeWrapper> = getTransferDestinations(
 			extractorLocation = originKey,
@@ -187,10 +194,15 @@ class ItemTransportCache(override val holder: CacheHolder<ItemTransportCache>): 
 
 				key to invs[key]!!
 			}
-			transaction.addAnimation(
-				reference,
+
+			val world = reference.inventory.location?.world ?: return
+
+			transaction.playTransferAnimation(
+				originKey,
+				world,
 				destinationInventories,
-				singletonItem.clone()
+				singletonItem.clone(),
+				animationTick
 			)
 		}
 
