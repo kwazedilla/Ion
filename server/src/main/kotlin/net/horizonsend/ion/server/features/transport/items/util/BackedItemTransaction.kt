@@ -13,22 +13,25 @@ class BackedItemTransaction(
 	val destinations: Long2ObjectRBTreeMap<CraftInventory>,
 	val destinationSelector: (Long2ObjectRBTreeMap<CraftInventory>) -> Pair<BlockKey, CraftInventory>
 ) {
+	private val successfulInventoryBlockKeys = mutableListOf<BlockKey>()
+
 	fun check(): Boolean {
 		return true
 	}
 
-	fun execute() {
-		val cloned = source.inventory.getItem(source.index)?.clone() ?: return
+	fun execute(): List<BlockKey> {
+		val cloned = source.inventory.getItem(source.index)?.clone() ?: return listOf()
 		val notRemoved = tryRemove()
 
 		val limit = amount - notRemoved
 
-		if (limit <= 0) return
+		if (limit <= 0) return listOf()
 
 		val notAdded = addToDestination(limit)
-		if (notAdded <= 0) return
+		if (notAdded <= 0) return listOf()
 
 		source.inventory.setItem(source.index, cloned.asQuantity(notAdded))
+		return successfulInventoryBlockKeys
 	}
 
 	// Returns amount that could not be removed
@@ -65,6 +68,7 @@ class BackedItemTransaction(
 
 			if (remainder == 0) return 0
 			remaining -= (remaining - remainder)
+			successfulInventoryBlockKeys += destination.first
 			destinations.remove(destination.first)
 		}
 

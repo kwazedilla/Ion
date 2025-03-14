@@ -194,20 +194,12 @@ class ItemTransportCache(override val holder: CacheHolder<ItemTransportCache>): 
 
 				key to invs[key]!!
 			}
-
-			val world = reference.inventory.location?.world ?: return
-
-			transaction.playTransferAnimation(
-				originKey,
-				world,
-				destinationInventories,
-				singletonItem.clone(),
-				animationTick
-			)
 		}
 
+		val world = destinationInventories.values.first().location?.world ?: return
+
 		Tasks.sync {
-			transaction.commit()
+			transaction.commit(originKey, world, singletonItem, animationTick)
 		}
 	}
 

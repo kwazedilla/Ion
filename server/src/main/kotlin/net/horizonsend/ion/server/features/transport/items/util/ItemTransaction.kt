@@ -1,8 +1,9 @@
 package net.horizonsend.ion.server.features.transport.items.util
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectRBTreeMap
-import net.horizonsend.ion.server.features.starship.subsystem.weapon.projectile.ItemDisplayWrapper
-import net.horizonsend.ion.server.miscellaneous.utils.Tasks
+import net.horizonsend.ion.server.features.client.display.modular.ItemDisplayWrapper
+import net.horizonsend.ion.server.features.client.display.modular.display.ItemAnimation
+import net.horizonsend.ion.server.features.client.display.modular.display.Keyframe
 import net.horizonsend.ion.server.miscellaneous.utils.coordinates.BlockKey
 import net.horizonsend.ion.server.miscellaneous.utils.coordinates.toVec3i
 import org.bukkit.World
@@ -23,48 +24,49 @@ class ItemTransaction {
 		transactions += BackedItemTransaction(sourceReference, transferredItem, transferredAmount, destinationInventories, destinationSelector)
 	}
 
-	fun playTransferAnimation(
+	fun commit(
 		originKey: BlockKey,
 		world: World,
-		destinationInventories: Long2ObjectRBTreeMap<CraftInventory>,
 		transferredItem: ItemStack,
-		tickDelay: Long,
+		animationTickDelay: Long,
 	) {
-		val originVector = toVec3i(originKey)
-		val originLocation = originVector.toLocation(world)
-
-		for (destinationInventory in destinationInventories) {
-			val itemDisplayWrapper = ItemDisplayWrapper(
-				world = originLocation.world,
-				initPosition = originLocation.toCenterLocation().toVector(),
-				initHeading = Vector(),
-				initTransformation = Vector(),
-				initInterpolationDuration = 10,
-				item = transferredItem,
-				initScale = Vector(0.75, 0.75, 0.75)
-			)
-			itemDisplayWrapper.update()
-
-			// Notes: 1L delay seems to result in very inconsistent animations (specifically the lack of animations).
-			// 2L may be the minimum to guarantee offset interpolation.
-			Tasks.asyncDelay(2L + tickDelay) {
-				val destinationLocation = destinationInventory.value.location
-				if (destinationLocation != null) {
-					itemDisplayWrapper.offset = destinationLocation.toCenterLocation().toVector().subtract(originLocation.toCenterLocation().toVector())
-					itemDisplayWrapper.update()
-				}
-			}
-
-			Tasks.syncDelay(20L + tickDelay) {
-				itemDisplayWrapper.remove()
-			}
-		}
-	}
-
-	fun commit() {
 		transactions
 			.filter { transaction -> transaction.check() }
-			.forEach { t -> t.execute() }
+			.forEach { t ->
+				// all transfers should have finished after this
+				val destinations = t.execute()
+
+				// location of original extractor
+				val originVector = toVec3i(originKey)
+				val originLocation = originVector.toLocation(world)
+
+				// successful destinations, where items were deposited
+				for (destination in destinations) {
+					// create a new item for every container
+					// TODO: this would be better inside the Animation class
+					val itemDisplayWrapper = ItemDisplayWrapper(
+						world = originLocation.world,
+						initPosition = originLocation.toCenterLocation().toVector(),
+						initHeading = Vector(),
+						initTransformation = Vector(),
+						initInterpolationDuration = 10,
+						item = transferredItem,
+						initScale = Vector(0.75, 0.75, 0.75)
+					)
+
+					val animation = ItemAnimation(itemDisplayWrapper, 20L, animationTickDelay)
+
+					val destinationVector = toVec3i(destination)
+					val destinationLocation = destinationVector.toLocation(world)
+
+					animation.addKeyframe(2L, Keyframe(
+						offset = destinationLocation.toCenterLocation().toVector()
+							.subtract(originLocation.toCenterLocation().toVector())
+					))
+
+					animation.play()
+				}
+			}
 	}
 
 	fun checkAll(): Boolean {
