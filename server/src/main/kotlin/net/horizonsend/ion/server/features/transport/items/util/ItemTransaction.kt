@@ -1,7 +1,6 @@
 package net.horizonsend.ion.server.features.transport.items.util
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectRBTreeMap
-import net.horizonsend.ion.server.features.client.display.modular.ItemDisplayWrapper
 import net.horizonsend.ion.server.features.client.display.modular.display.ItemAnimation
 import net.horizonsend.ion.server.features.client.display.modular.display.Keyframe
 import net.horizonsend.ion.server.miscellaneous.utils.coordinates.BlockKey
@@ -36,37 +35,38 @@ class ItemTransaction {
 				// all transfers should have finished after this
 				val destinations = t.execute()
 
-				// location of original extractor
-				val originVector = toVec3i(originKey)
-				val originLocation = originVector.toLocation(world)
-
-				// successful destinations, where items were deposited
-				for (destination in destinations) {
-					// create a new item for every container
-					// TODO: this would be better inside the Animation class
-					val itemDisplayWrapper = ItemDisplayWrapper(
-						world = originLocation.world,
-						initPosition = originLocation.toCenterLocation().toVector(),
-						initHeading = Vector(),
-						initTransformation = Vector(),
-						initInterpolationDuration = 10,
-						item = transferredItem,
-						initScale = Vector(0.75, 0.75, 0.75)
-					)
-
-					val animation = ItemAnimation(itemDisplayWrapper, 20L, animationTickDelay)
-
-					val destinationVector = toVec3i(destination)
-					val destinationLocation = destinationVector.toLocation(world)
-
-					animation.addKeyframe(2L, Keyframe(
-						offset = destinationLocation.toCenterLocation().toVector()
-							.subtract(originLocation.toCenterLocation().toVector())
-					))
-
-					animation.play()
-				}
+				handleAnimation(originKey, world, destinations, transferredItem, animationTickDelay)
 			}
+	}
+
+	private fun handleAnimation(
+		originKey: BlockKey,
+		world: World,
+		destinations: List<BlockKey>,
+		transferredItem: ItemStack,
+		animationTickDelay: Long
+	) {
+		// location of original extractor
+		val originVector = toVec3i(originKey)
+		val originLocation = originVector.toLocation(world)
+
+		// successful destinations, where items were deposited
+		for (destination in destinations) {
+			// create a new animation for every container
+			val animation = ItemAnimation(transferredItem, originLocation, 20L, animationTickDelay)
+
+			val destinationVector = toVec3i(destination)
+			val destinationLocation = destinationVector.toLocation(world)
+
+			animation.addKeyframe(
+				5L, Keyframe(
+					offset = /*destinationLocation.toCenterLocation().toVector().subtract(
+						originLocation.toCenterLocation().toVector()*/Vector(5, 5, 5)
+				)
+			)
+
+			animation.play()
+		}
 	}
 
 	fun checkAll(): Boolean {

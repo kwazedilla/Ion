@@ -15,6 +15,7 @@ class GlowModule(controller: AIController) : net.horizonsend.ion.server.features
 		BlockFace.UP.direction,
 		Vector(),
 		0,
+		0,
 		ItemStack(Material.JUKEBOX),
 		Vector(1.5f, 1.5f, 1.5f)
 	).apply {

@@ -20,15 +20,15 @@ class BackedItemTransaction(
 	}
 
 	fun execute(): List<BlockKey> {
-		val cloned = source.inventory.getItem(source.index)?.clone() ?: return listOf()
+		val cloned = source.inventory.getItem(source.index)?.clone() ?: return successfulInventoryBlockKeys
 		val notRemoved = tryRemove()
 
 		val limit = amount - notRemoved
 
-		if (limit <= 0) return listOf()
+		if (limit <= 0) return successfulInventoryBlockKeys
 
 		val notAdded = addToDestination(limit)
-		if (notAdded <= 0) return listOf()
+		if (notAdded <= 0) return successfulInventoryBlockKeys
 
 		source.inventory.setItem(source.index, cloned.asQuantity(notAdded))
 		return successfulInventoryBlockKeys
@@ -65,10 +65,10 @@ class BackedItemTransaction(
 			destinationsRemaining--
 			val destination = destinationSelector(destinations)
 			val remainder = addToInventory(destination.second, item.asQuantity(remaining))
+			successfulInventoryBlockKeys += destination.first
 
 			if (remainder == 0) return 0
 			remaining -= (remaining - remainder)
-			successfulInventoryBlockKeys += destination.first
 			destinations.remove(destination.first)
 		}
 

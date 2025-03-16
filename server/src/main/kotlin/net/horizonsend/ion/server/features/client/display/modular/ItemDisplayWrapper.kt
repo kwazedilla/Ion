@@ -11,6 +11,7 @@ import org.bukkit.World
 import org.bukkit.craftbukkit.CraftServer
 import org.bukkit.craftbukkit.entity.CraftItemDisplay
 import org.bukkit.craftbukkit.inventory.CraftItemStack
+import org.bukkit.entity.ItemDisplay
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.Transformation
 import org.bukkit.util.Vector
@@ -22,6 +23,7 @@ class ItemDisplayWrapper(
 	initHeading: Vector,
 	initTransformation: Vector,
 	initInterpolationDuration: Int,
+	initTeleportDuration: Int,
 	item: ItemStack,
 	initScale: Vector = Vector(1.0, 1.0, 1.0)
 ) {
@@ -29,35 +31,42 @@ class ItemDisplayWrapper(
 		set(value) {
 			field = value
 			updateTransformation(entity)
-			playerManager.runUpdates()
+			update()
 		}
 
 	var position: Vector = initPosition
 		set(value) {
 			field = value
 			updateTransformation(entity)
-			playerManager.sendTeleport()
+			teleport()
 		}
 
 	var heading: Vector = initHeading
 		set(value) {
 			field = value
 			updateTransformation(entity)
-			playerManager.runUpdates()
+			update()
 		}
 
 	var offset: Vector = initTransformation
 		set(value) {
 			field = value
 			updateTransformation(entity)
-			playerManager.runUpdates()
+			update()
 		}
 
 	var interpolationDuration: Int = initInterpolationDuration
 		set(value) {
 			field = value
 			updateInterpolation(entity)
-			playerManager.runUpdates()
+			update()
+		}
+
+	var teleportDuration: Int = initTeleportDuration
+		set(value) {
+			field = value
+			updateTeleportDuration(entity)
+			update()
 		}
 
 	var itemStack: ItemStack = item
@@ -79,7 +88,7 @@ class ItemDisplayWrapper(
 		Display.ItemDisplay(EntityType.ITEM_DISPLAY, world.minecraft)
 	).apply {
 		billboard = org.bukkit.entity.Display.Billboard.FIXED
-		teleportDuration = 0
+		teleportDuration = 5
 		interpolationDuration = 5
 		viewRange = 1000f
 		brightness = org.bukkit.entity.Display.Brightness(15, 15)
@@ -92,6 +101,12 @@ class ItemDisplayWrapper(
 		)
 
 		setItemStack(this@ItemDisplayWrapper.itemStack)
+	}
+
+	fun updatePosition(entity: Display.ItemDisplay) {
+		entity.teleportTo(position.x, position.y, position.z)
+		teleport()
+		update()
 	}
 
 	fun updateTransformation(entity: Display.ItemDisplay) {
@@ -110,12 +125,21 @@ class ItemDisplayWrapper(
 		update()
 	}
 
+	fun updateTeleportDuration(entity: Display.ItemDisplay) {
+		(entity.bukkitEntity as ItemDisplay).teleportDuration = teleportDuration
+		update()
+	}
+
 	fun remove() {
 		playerManager.sendRemove()
 	}
 
 	fun update() {
 		playerManager.runUpdates()
+	}
+
+	fun teleport() {
+		playerManager.sendTeleport()
 	}
 
 	fun getEntity() = entity

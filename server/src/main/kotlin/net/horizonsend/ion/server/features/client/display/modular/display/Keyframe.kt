@@ -7,5 +7,6 @@ data class Keyframe(
     val heading: Vector? = null,
     val offset: Vector? = null,
     val interpolationDuration: Int? = null,
+    val teleportDuration: Int? = null,
     val scale: Vector? = null,
 )

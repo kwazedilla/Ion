@@ -196,7 +196,7 @@ class ItemTransportCache(override val holder: CacheHolder<ItemTransportCache>): 
 			}
 		}
 
-		val world = destinationInventories.values.first().location?.world ?: return
+		val world = destinations.first().node.world
 
 		Tasks.sync {
 			transaction.commit(originKey, world, singletonItem, animationTick)

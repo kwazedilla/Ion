@@ -43,6 +43,7 @@ class FlamingSkullProjectile(
 		dir,
 		Vector(),
 		0,
+		0,
 		ItemStack(Material.SKELETON_SKULL),
 		Vector(5.0f, 5.0f, 5.0f)
 	)

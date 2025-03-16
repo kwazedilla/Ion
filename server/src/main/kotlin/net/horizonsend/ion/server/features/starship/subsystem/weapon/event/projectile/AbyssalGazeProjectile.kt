@@ -43,6 +43,7 @@ class AbyssalGazeProjectile(
 		dir,
 		Vector(),
 		0,
+		0,
 		skullItem("skull", UUID.fromString("bf8c1907-b235-4152-84bb-a5f28b58f89c"), "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmFmMGJjNGEyMzdiZDIwMTZjZDdlOWZhMGExNWM5ZWY3MjJlMDc5OTcwODU0NTJkNjVmM2U4ZmFkODZjM2JkNSJ9fX0="),
 		Vector(1.5f, 1.5f, 1.5f,)
 	)
