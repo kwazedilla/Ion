@@ -4,7 +4,7 @@ import net.horizonsend.ion.common.utils.miscellaneous.roundToHundredth
 import net.horizonsend.ion.common.utils.text.ofChildren
 import net.horizonsend.ion.server.features.client.display.modular.DisplayHandlerHolder
 import net.horizonsend.ion.server.features.client.display.modular.DisplayHandlers
-import net.horizonsend.ion.server.features.client.display.modular.display.FlowMeterDisplayModule
+import net.horizonsend.ion.server.features.client.display.modular.display.FlowMeterTextDisplayModule
 import net.horizonsend.ion.server.features.starship.movement.StarshipMovement
 import net.horizonsend.ion.server.features.transport.nodes.cache.PowerTransportCache
 import net.horizonsend.ion.server.features.transport.nodes.types.Node.Companion.adjacentMinusBackwards
@@ -99,7 +99,7 @@ sealed interface PowerNode : Node {
 		val rollingAverage = RollingAverage()
 
 		override var isAlive: Boolean = true
-		val displayHandler = DisplayHandlers.newBlockOverlay(this, toVec3i(location), face, { FlowMeterDisplayModule(it, this, 0.0, 0.0, 0.0, 0.7f) })
+		val displayHandler = DisplayHandlers.newBlockOverlay(this, toVec3i(location), face, { FlowMeterTextDisplayModule(it, this, 0.0, 0.0, 0.0, 0.7f) })
 
         fun onCompleteChain(transferred: Int) {
 			// Push onto queue

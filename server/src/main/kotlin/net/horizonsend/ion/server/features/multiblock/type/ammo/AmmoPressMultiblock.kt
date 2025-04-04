@@ -1,8 +1,8 @@
 package net.horizonsend.ion.server.features.multiblock.type.ammo
 
 import net.horizonsend.ion.server.features.client.display.modular.DisplayHandlers
-import net.horizonsend.ion.server.features.client.display.modular.display.PowerEntityDisplayModule
-import net.horizonsend.ion.server.features.client.display.modular.display.StatusDisplayModule
+import net.horizonsend.ion.server.features.client.display.modular.display.PowerEntityTextDisplayModule
+import net.horizonsend.ion.server.features.client.display.modular.display.StatusTextDisplayModule
 import net.horizonsend.ion.server.features.custom.items.CustomItemRegistry.customItem
 import net.horizonsend.ion.server.features.custom.items.attribute.AmmunitionRefillType
 import net.horizonsend.ion.server.features.custom.items.component.CustomComponentTypes
@@ -160,8 +160,8 @@ abstract class AmmoPressMultiblock : Multiblock(), EntityMultiblock<AmmoPressMul
 
 		override val displayHandler = DisplayHandlers.newMultiblockSignOverlay(
 			this,
-			{ PowerEntityDisplayModule(it, this) },
-			{ StatusDisplayModule(it, statusManager) }
+			{ PowerEntityTextDisplayModule(it, this) },
+			{ StatusTextDisplayModule(it, statusManager) }
 		).register()
 
 		override fun tick() {

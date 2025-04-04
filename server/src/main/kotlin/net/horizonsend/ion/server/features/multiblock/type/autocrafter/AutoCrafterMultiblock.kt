@@ -7,8 +7,8 @@ import net.horizonsend.ion.common.utils.text.ofChildren
 import net.horizonsend.ion.common.utils.text.orEmpty
 import net.horizonsend.ion.server.IonServer
 import net.horizonsend.ion.server.features.client.display.modular.DisplayHandlers
-import net.horizonsend.ion.server.features.client.display.modular.display.PowerEntityDisplayModule
-import net.horizonsend.ion.server.features.client.display.modular.display.StatusDisplayModule
+import net.horizonsend.ion.server.features.client.display.modular.display.PowerEntityTextDisplayModule
+import net.horizonsend.ion.server.features.client.display.modular.display.StatusTextDisplayModule
 import net.horizonsend.ion.server.features.multiblock.Multiblock
 import net.horizonsend.ion.server.features.multiblock.entity.PersistentMultiblockData
 import net.horizonsend.ion.server.features.multiblock.entity.type.LegacyMultiblockEntity
@@ -153,8 +153,8 @@ abstract class AutoCrafterMultiblock(
 
 		override val displayHandler = DisplayHandlers.newMultiblockSignOverlay(
 			this,
-			{ PowerEntityDisplayModule(it, this) },
-			{ StatusDisplayModule(it, statusManager) }
+			{ PowerEntityTextDisplayModule(it, this) },
+			{ StatusTextDisplayModule(it, statusManager) }
 		).register()
 
 		private fun getInput(): Inventory? = getInventory(-2, 0, 1)

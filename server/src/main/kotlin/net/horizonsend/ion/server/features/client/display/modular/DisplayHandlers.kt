@@ -1,7 +1,7 @@
 package net.horizonsend.ion.server.features.client.display.modular
 
 import net.horizonsend.ion.server.IonServerComponent
-import net.horizonsend.ion.server.features.client.display.modular.display.DisplayModule
+import net.horizonsend.ion.server.features.client.display.modular.display.TextDisplayModule
 import net.horizonsend.ion.server.features.multiblock.entity.MultiblockEntity
 import net.horizonsend.ion.server.miscellaneous.utils.Tasks
 import net.horizonsend.ion.server.miscellaneous.utils.coordinates.Vec3i
@@ -15,7 +15,7 @@ object DisplayHandlers : IonServerComponent() {
 
 	}
 
-	fun newMultiblockSignOverlay(entity: MultiblockEntity, vararg displayModule: (TextDisplayHandler) -> DisplayModule): TextDisplayHandler {
+	fun newMultiblockSignOverlay(entity: MultiblockEntity, vararg textDisplayModule: (TextDisplayHandler) -> TextDisplayModule): TextDisplayHandler {
 		val signDirection = entity.structureDirection.oppositeFace
 		val signLocation = entity.getSignLocation()
 
@@ -23,17 +23,17 @@ object DisplayHandlers : IonServerComponent() {
 			.setOffset(offsetRight = 0.0, offsetUp = -0.5, offsetForward = -0.39)
 			.setDirection(signDirection)
 
-		displayModule.forEach(builder::addDisplay)
+		textDisplayModule.forEach(builder::addDisplay)
 
 		return builder.build()
 	}
 
-	fun newBlockOverlay(holder: DisplayHandlerHolder, block: Vec3i, direction: BlockFace, vararg displayModule: (TextDisplayHandler) -> DisplayModule): TextDisplayHandler {
+	fun newBlockOverlay(holder: DisplayHandlerHolder, block: Vec3i, direction: BlockFace, vararg textDisplayModule: (TextDisplayHandler) -> TextDisplayModule): TextDisplayHandler {
 		val builder = TextDisplayHandler.builder(holder, block.x, block.y, block.z)
 				.setOffset(offsetRight = 0.0, offsetUp = -0.1, offsetForward = +0.501)
 			.setDirection(direction)
 
-		displayModule.forEach(builder::addDisplay)
+		textDisplayModule.forEach(builder::addDisplay)
 
 		return builder.build()
 	}

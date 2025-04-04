@@ -1,6 +1,6 @@
 package net.horizonsend.ion.server.features.client.display.modular
 
-import net.horizonsend.ion.server.features.client.display.modular.display.DisplayModule
+import net.horizonsend.ion.server.features.client.display.modular.display.TextDisplayModule
 import net.horizonsend.ion.server.features.starship.movement.StarshipMovement
 import net.horizonsend.ion.server.miscellaneous.utils.axis
 import net.horizonsend.ion.server.miscellaneous.utils.rightFace
@@ -21,7 +21,7 @@ class TextDisplayHandler private constructor(
 
 	var facing: BlockFace,
 ) {
-	var displayModules = listOf<DisplayModule>()
+	var textDisplayModules = listOf<TextDisplayModule>()
 
 	fun update() {
 		if (!holder.isAlive) {
@@ -29,13 +29,13 @@ class TextDisplayHandler private constructor(
 			return
 		}
 
-		displayModules.forEach {
+		textDisplayModules.forEach {
 			it.runUpdates()
 		}
 	}
 
 	fun remove() {
-		displayModules.forEach {
+		textDisplayModules.forEach {
 			it.remove()
 			it.deRegister()
 		}
@@ -44,7 +44,7 @@ class TextDisplayHandler private constructor(
 	}
 
 	fun register(): TextDisplayHandler {
-		displayModules.forEach {
+		textDisplayModules.forEach {
 			it.register()
 			it.runUpdates()
 		}
@@ -82,18 +82,18 @@ class TextDisplayHandler private constructor(
 		anchorBlockY = newY
 		anchorBlockZ = newZ
 
-		for (display in displayModules) display.resetPosition()
+		for (display in textDisplayModules) display.resetPosition()
 	}
 
 	class Builder(val holder: DisplayHandlerHolder, val anchorBlockX: Int, val anchorBlockY: Int, val anchorBlockZ: Int) {
-		private val displays = mutableSetOf<(TextDisplayHandler) -> DisplayModule>()
+		private val displays = mutableSetOf<(TextDisplayHandler) -> TextDisplayModule>()
 
 		private var offsetForward = 0.0
 		private var offsetRight = 0.0
 		private var offsetUp = 0.0
 		private var direction: BlockFace = BlockFace.NORTH
 
-		fun addDisplay(build: (TextDisplayHandler) -> DisplayModule): Builder {
+		fun addDisplay(build: (TextDisplayHandler) -> TextDisplayModule): Builder {
 			displays.add(build)
 			return this
 		}
@@ -122,7 +122,7 @@ class TextDisplayHandler private constructor(
 				facing = direction
 			)
 
-			handler.displayModules = displays.map { build -> build.invoke(handler) }
+			handler.textDisplayModules = displays.map { build -> build.invoke(handler) }
 			handler.register()
 
 			return handler

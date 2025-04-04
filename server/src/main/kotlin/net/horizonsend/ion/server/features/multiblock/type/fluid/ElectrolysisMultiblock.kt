@@ -6,9 +6,9 @@ import net.horizonsend.ion.common.utils.text.ofChildren
 import net.horizonsend.ion.server.features.client.display.ClientDisplayEntities.highlightBlock
 import net.horizonsend.ion.server.features.client.display.modular.DisplayHandlers
 import net.horizonsend.ion.server.features.client.display.modular.display.MATCH_SIGN_FONT_SIZE
-import net.horizonsend.ion.server.features.client.display.modular.display.PowerEntityDisplayModule
-import net.horizonsend.ion.server.features.client.display.modular.display.fluid.ComplexFluidDisplayModule
-import net.horizonsend.ion.server.features.client.display.modular.display.fluid.SimpleFluidDisplayModule
+import net.horizonsend.ion.server.features.client.display.modular.display.PowerEntityTextDisplayModule
+import net.horizonsend.ion.server.features.client.display.modular.display.fluid.ComplexFluidTextDisplayModule
+import net.horizonsend.ion.server.features.client.display.modular.display.fluid.SimpleFluidTextDisplayModule
 import net.horizonsend.ion.server.features.client.display.modular.display.getLinePos
 import net.horizonsend.ion.server.features.multiblock.Multiblock
 import net.horizonsend.ion.server.features.multiblock.entity.MultiblockEntity
@@ -194,7 +194,7 @@ object ElectrolysisMultiblock : Multiblock(), EntityMultiblock<ElectrolysisMulti
 		player.information("Location ${handler.anchorBlockX}, ${handler.anchorBlockY}, ${handler.anchorBlockZ}")
 		player.information("Facing ${handler.facing}")
 
-		entity.displayHandler.displayModules.forEach { display ->
+		entity.displayHandler.textDisplayModules.forEach { display ->
 			player.information("Display $display")
 			player.information("Location ${display.getLocation()}")
 			player.highlightBlock(display.entity.blockPosition().toVec3i(), 10L)
@@ -230,10 +230,10 @@ object ElectrolysisMultiblock : Multiblock(), EntityMultiblock<ElectrolysisMulti
 
 		override val displayHandler = DisplayHandlers.newMultiblockSignOverlay(
 			this,
-			{ PowerEntityDisplayModule(it, this) },
-			{ SimpleFluidDisplayModule(it, waterStorage, +0.0, getLinePos(3), +0.0, MATCH_SIGN_FONT_SIZE) },
-			{ ComplexFluidDisplayModule(it, hydrogenStorage, text("Hydrogen"), +1.0, +0.0, +0.0, MATCH_SIGN_FONT_SIZE) },
-			{ ComplexFluidDisplayModule(it, oxygenStorage, text("Oxygen"), -1.0, +0.0, +0.0, MATCH_SIGN_FONT_SIZE) },
+			{ PowerEntityTextDisplayModule(it, this) },
+			{ SimpleFluidTextDisplayModule(it, waterStorage, +0.0, getLinePos(3), +0.0, MATCH_SIGN_FONT_SIZE) },
+			{ ComplexFluidTextDisplayModule(it, hydrogenStorage, text("Hydrogen"), +1.0, +0.0, +0.0, MATCH_SIGN_FONT_SIZE) },
+			{ ComplexFluidTextDisplayModule(it, oxygenStorage, text("Oxygen"), -1.0, +0.0, +0.0, MATCH_SIGN_FONT_SIZE) },
 		).register()
 
 		override fun tickAsync() {

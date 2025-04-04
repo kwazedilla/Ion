@@ -6,14 +6,14 @@ import net.horizonsend.ion.server.features.multiblock.entity.type.fluids.storage
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.Component.space
 
-class SimpleFluidDisplayModule(
+class SimpleFluidTextDisplayModule(
 	handler: TextDisplayHandler,
 	storage: StorageContainer,
 	offsetLeft: Double,
 	offsetUp: Double,
 	offsetBack: Double,
 	scale: Float
-) : FluidDisplayModule(handler, storage, offsetLeft, offsetUp, offsetBack, scale) {
+) : FluidTextDisplayModule(handler, storage, offsetLeft, offsetUp, offsetBack, scale) {
 	override fun buildText(): Component {
 		return ofChildren(formatFluid(), space(), container.internalStorage.getFluidType().displayName)
 	}

@@ -6,17 +6,15 @@ import net.horizonsend.ion.server.features.multiblock.entity.type.fluids.storage
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.Component.newline
 
-class ComplexFluidDisplayModule(
+class SplitFluidTextDisplayModule(
 	handler: TextDisplayHandler,
-	container: StorageContainer,
-	val title: Component,
+	storage: StorageContainer,
 	offsetLeft: Double,
 	offsetUp: Double,
 	offsetBack: Double,
 	scale: Float
-) : FluidDisplayModule(handler, container, offsetLeft, offsetUp, offsetBack, scale) {
-
+) : FluidTextDisplayModule(handler, storage, offsetLeft, offsetUp, offsetBack, scale) {
 	override fun buildText(): Component {
-		return ofChildren(title, newline(), formatFluid())
+		return ofChildren(container.internalStorage.getFluidType().displayName, newline(), formatFluid())
 	}
 }

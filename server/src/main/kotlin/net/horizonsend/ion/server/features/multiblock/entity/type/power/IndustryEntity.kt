@@ -1,8 +1,8 @@
 package net.horizonsend.ion.server.features.multiblock.entity.type.power
 
 import net.horizonsend.ion.server.features.client.display.modular.DisplayHandlers
-import net.horizonsend.ion.server.features.client.display.modular.display.PowerEntityDisplayModule
-import net.horizonsend.ion.server.features.client.display.modular.display.StatusDisplayModule
+import net.horizonsend.ion.server.features.client.display.modular.display.PowerEntityTextDisplayModule
+import net.horizonsend.ion.server.features.client.display.modular.display.StatusTextDisplayModule
 import net.horizonsend.ion.server.features.multiblock.Multiblock
 import net.horizonsend.ion.server.features.multiblock.crafting.input.FurnaceEnviornment
 import net.horizonsend.ion.server.features.multiblock.crafting.recipe.MultiblockRecipe
@@ -40,8 +40,8 @@ abstract class IndustryEntity(data: PersistentMultiblockData, multiblock: Multib
 	@Suppress("LeakingThis")
 	final override val displayHandler = DisplayHandlers.newMultiblockSignOverlay(
 		this,
-		{ PowerEntityDisplayModule(it, this) },
-		{ StatusDisplayModule(it, statusManager) }
+		{ PowerEntityTextDisplayModule(it, this) },
+		{ StatusTextDisplayModule(it, statusManager) }
 	)
 
 	override fun loadFromSign(sign: Sign) {

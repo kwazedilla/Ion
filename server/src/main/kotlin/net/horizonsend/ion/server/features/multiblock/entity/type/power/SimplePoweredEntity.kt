@@ -2,7 +2,7 @@ package net.horizonsend.ion.server.features.multiblock.entity.type.power
 
 import net.horizonsend.ion.server.features.client.display.modular.DisplayHandlers
 import net.horizonsend.ion.server.features.client.display.modular.TextDisplayHandler
-import net.horizonsend.ion.server.features.client.display.modular.display.PowerEntityDisplayModule
+import net.horizonsend.ion.server.features.client.display.modular.display.PowerEntityTextDisplayModule
 import net.horizonsend.ion.server.features.multiblock.Multiblock
 import net.horizonsend.ion.server.features.multiblock.entity.MultiblockEntity
 import net.horizonsend.ion.server.features.multiblock.entity.PersistentMultiblockData
@@ -39,7 +39,7 @@ abstract class SimplePoweredEntity(
 
 	protected fun standardPowerDisplay(entity: SimplePoweredEntity): TextDisplayHandler = DisplayHandlers.newMultiblockSignOverlay(
 		entity,
-		{ PowerEntityDisplayModule(it, entity) }
+		{ PowerEntityTextDisplayModule(it, entity) }
 	)
 
 	override val inputsData: InputsData = InputsData.Builder(this)

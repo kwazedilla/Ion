@@ -2,7 +2,7 @@ package net.horizonsend.ion.server.features.multiblock.type.shipfactory
 
 import net.horizonsend.ion.server.features.client.display.modular.DisplayHandlers
 import net.horizonsend.ion.server.features.client.display.modular.TextDisplayHandler
-import net.horizonsend.ion.server.features.client.display.modular.display.StatusDisplayModule
+import net.horizonsend.ion.server.features.client.display.modular.display.StatusTextDisplayModule
 import net.horizonsend.ion.server.features.multiblock.entity.PersistentMultiblockData
 import net.horizonsend.ion.server.features.multiblock.manager.MultiblockManager
 import net.horizonsend.ion.server.features.multiblock.shape.MultiblockShape
@@ -77,7 +77,7 @@ object ShipFactoryMultiblock : AbstractShipFactoryMultiblock<ShipFactoryMultiblo
 
 		override val displayHandler: TextDisplayHandler = DisplayHandlers.newMultiblockSignOverlay(
 			this,
-			{ StatusDisplayModule(it, statusManager) }
+			{ StatusTextDisplayModule(it, statusManager) }
 		).register()
 
 		private val inventoryOffset = Vec3i(1, 0, 0)

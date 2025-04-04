@@ -4,14 +4,14 @@ import net.horizonsend.ion.server.features.client.display.modular.TextDisplayHan
 import net.horizonsend.ion.server.features.transport.nodes.types.PowerNode
 import net.kyori.adventure.text.Component
 
-class FlowMeterDisplayModule(
+class FlowMeterTextDisplayModule(
 	handler: TextDisplayHandler,
 	private val meter: PowerNode.PowerFlowMeter,
 	offsetRight: Double,
 	offsetUp: Double,
 	offsetForward: Double,
 	scale: Float
-): DisplayModule(handler, offsetRight, offsetUp, offsetForward, scale) {
+): TextDisplayModule(handler, offsetRight, offsetUp, offsetForward, scale) {
 	override fun register() {}
 	override fun deRegister() {}
 

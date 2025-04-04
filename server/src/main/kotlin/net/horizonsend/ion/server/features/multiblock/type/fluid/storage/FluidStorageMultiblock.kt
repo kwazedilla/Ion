@@ -3,7 +3,7 @@ package net.horizonsend.ion.server.features.multiblock.type.fluid.storage
 import net.horizonsend.ion.common.utils.text.ofChildren
 import net.horizonsend.ion.server.features.client.display.modular.DisplayHandlers
 import net.horizonsend.ion.server.features.client.display.modular.display.MATCH_SIGN_FONT_SIZE
-import net.horizonsend.ion.server.features.client.display.modular.display.fluid.SplitFluidDisplayModule
+import net.horizonsend.ion.server.features.client.display.modular.display.fluid.SplitFluidTextDisplayModule
 import net.horizonsend.ion.server.features.multiblock.Multiblock
 import net.horizonsend.ion.server.features.multiblock.entity.PersistentMultiblockData
 import net.horizonsend.ion.server.features.multiblock.entity.type.DisplayMultiblockEntity
@@ -58,7 +58,7 @@ abstract class FluidStorageMultiblock(val capacity: Int) : Multiblock(), EntityM
 
 		override val displayHandler = DisplayHandlers.newMultiblockSignOverlay(
 			this,
-			{ SplitFluidDisplayModule(it, mainStorage, +0.0, -0.0, +0.0, MATCH_SIGN_FONT_SIZE) },
+			{ SplitFluidTextDisplayModule(it, mainStorage, +0.0, -0.0, +0.0, MATCH_SIGN_FONT_SIZE) },
 		).register()
 
 		override val inputsData: InputsData = InputsData.builder(this)

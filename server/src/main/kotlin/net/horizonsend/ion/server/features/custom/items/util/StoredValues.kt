@@ -1,7 +1,7 @@
 package net.horizonsend.ion.server.features.custom.items.util
 
 import net.horizonsend.ion.common.utils.text.ofChildren
-import net.horizonsend.ion.server.features.client.display.modular.display.PowerEntityDisplayModule.Companion.powerPrefix
+import net.horizonsend.ion.server.features.client.display.modular.display.PowerEntityTextDisplayModule.Companion.powerPrefix
 import net.horizonsend.ion.server.miscellaneous.registrations.persistence.NamespacedKeys
 import net.horizonsend.ion.server.miscellaneous.utils.text.itemLore
 import net.horizonsend.ion.server.miscellaneous.utils.updatePersistentDataContainer

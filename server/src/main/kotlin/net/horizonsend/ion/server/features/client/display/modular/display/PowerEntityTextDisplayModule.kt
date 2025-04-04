@@ -11,7 +11,7 @@ import net.kyori.adventure.text.Component.newline
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.format.NamedTextColor
 
-class PowerEntityDisplayModule(
+class PowerEntityTextDisplayModule(
 	handler: TextDisplayHandler,
 	private val multiblockEntity: PoweredMultiblockEntity,
 	offsetLeft: Double = 0.0,
@@ -19,7 +19,7 @@ class PowerEntityDisplayModule(
 	offsetBack: Double = 0.0,
 	scale: Float = MATCH_SIGN_FONT_SIZE,
 	val title: Component? = null
-): DisplayModule(handler, offsetLeft, offsetUp, offsetBack, scale) {
+): TextDisplayModule(handler, offsetLeft, offsetUp, offsetBack, scale) {
 	private val updateHandler: (PowerStorage) -> Unit = {
 		runUpdates()
 	}
