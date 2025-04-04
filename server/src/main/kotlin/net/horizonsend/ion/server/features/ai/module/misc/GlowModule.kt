@@ -2,13 +2,13 @@ package net.horizonsend.ion.server.features.ai.module.misc
 
 import net.horizonsend.ion.server.features.starship.control.controllers.ai.AIController
 import net.horizonsend.ion.server.features.starship.movement.StarshipMovement
-import net.horizonsend.ion.server.features.starship.subsystem.weapon.projectile.ItemDisplayContainer
+import net.horizonsend.ion.server.features.client.display.modular.ItemDisplayHandler
 import org.bukkit.Material
 import org.bukkit.block.BlockFace
 import org.bukkit.inventory.ItemStack
 
 class GlowModule(controller: AIController) : net.horizonsend.ion.server.features.ai.module.AIModule(controller) {
-	val container = ItemDisplayContainer(
+	val container = ItemDisplayHandler(
 		world,
 		1.5f,
 		starship.centerOfMass.toCenterVector(),

@@ -1,4 +1,4 @@
-package net.horizonsend.ion.server.features.starship.subsystem.weapon.projectile
+package net.horizonsend.ion.server.features.client.display.modular
 
 import net.horizonsend.ion.server.IonServer
 import net.horizonsend.ion.server.features.client.display.ClientDisplayEntities
@@ -24,7 +24,7 @@ import org.joml.Quaternionf
 import org.joml.Vector3f
 import java.util.UUID
 
-class ItemDisplayContainer(
+class ItemDisplayHandler(
 	val world: World,
 	initScale: Float,
 	initPosition: Vector,
@@ -109,7 +109,7 @@ class ItemDisplayContainer(
 		IonServer.server as CraftServer,
 		ItemDisplay(EntityType.ITEM_DISPLAY, world.minecraft)
 	).apply {
-		setItemStack(this@ItemDisplayContainer.itemStack)
+		setItemStack(this@ItemDisplayHandler.itemStack)
 		billboard = org.bukkit.entity.Display.Billboard.FIXED
 		brightness = org.bukkit.entity.Display.Brightness(15, 15)
 		teleportDuration = 0

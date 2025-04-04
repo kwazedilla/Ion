@@ -4,7 +4,7 @@ import net.horizonsend.ion.server.configuration.StarshipWeapons
 import net.horizonsend.ion.server.features.multiblock.type.starship.weapon.event.SkullThrowerStarshipWeaponMultiblock
 import net.horizonsend.ion.server.features.starship.Starship
 import net.horizonsend.ion.server.features.starship.damager.Damager
-import net.horizonsend.ion.server.features.starship.subsystem.weapon.projectile.ItemDisplayContainer
+import net.horizonsend.ion.server.features.client.display.modular.ItemDisplayHandler
 import net.horizonsend.ion.server.features.starship.subsystem.weapon.projectile.TrackingLaserProjectile
 import net.kyori.adventure.text.Component
 import org.bukkit.Color
@@ -37,7 +37,7 @@ class FlamingSkullProjectile(
 	override val maxDegrees: Double = 10.0
 	override val particleThickness: Double = 0.0
 
-	private val container = ItemDisplayContainer(
+	private val container = ItemDisplayHandler(
 		starship.world,
 		5.0F,
 		loc.toVector(),
