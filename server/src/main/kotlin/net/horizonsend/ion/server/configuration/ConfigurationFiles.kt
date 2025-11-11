@@ -48,6 +48,8 @@ object ConfigurationFiles {
 
 	val transportSettings = defineConfigurationFile<TransportConfiguration>(configurationFolder, "transport") { NewTransport.reload() }
 
+	val newBlasterBalancing = defineConfigurationFile<NewPVPBalancing>(configurationFolder, "newPvPBalancing")
+
 	private inline fun <reified T: Any> defineConfigurationFile(directory: File, fileName: String, noinline callback: () -> Unit = {}): ConfigurationFile<T> {
 		val new = ConfigurationFile(T::class, directory, fileName, callback)
 		configurationFiles.add(new)

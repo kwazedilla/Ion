@@ -37,6 +37,7 @@ import net.horizonsend.ion.server.features.custom.items.type.tool.PowerHoe
 import net.horizonsend.ion.server.features.custom.items.type.tool.mods.ModificationItem
 import net.horizonsend.ion.server.features.custom.items.type.weapon.blaster.Blaster
 import net.horizonsend.ion.server.features.custom.items.type.weapon.blaster.Magazine
+import net.horizonsend.ion.server.features.custom.items.type.weapon.blaster.ProjectileBlaster
 import net.horizonsend.ion.server.features.custom.items.type.weapon.sword.EnergySword
 import net.horizonsend.ion.server.features.custom.items.util.ItemFactory
 import net.horizonsend.ion.server.miscellaneous.registrations.persistence.NamespacedKeys
@@ -210,6 +211,17 @@ class CustomItemRegistry : Registry<CustomItem>(RegistryKeys.CUSTOM_ITEMS) {
                 balancingSupplier = ConfigurationFiles.pvpBalancing().energyWeapons::cannon
             )
         )
+
+		register(
+			CustomItemKeys.TEST_BLASTER, ProjectileBlaster(
+				key = CustomItemKeys.TEST_BLASTER,
+				displayName = Component.text("Test Blaster"),
+				modLimit = 1,
+				itemFactory = ItemFactory.Preset.builder().setMaterial(Material.IRON_HOE).setCustomModel("weapon/blaster/rifle").build(),
+				model = "weapon/blaster/rifle",
+				balancingSupplier = ConfigurationFiles.newBlasterBalancing().blasterBalancing::testBlaster
+			)
+		)
 	}
 
 	private fun registerGunParts() {
