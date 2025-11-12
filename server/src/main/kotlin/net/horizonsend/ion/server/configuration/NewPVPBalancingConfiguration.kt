@@ -23,6 +23,8 @@ sealed interface NewBlasterBalancing {
     val headshotMultiplier: Double
     val spreadDegrees: Double
 
+    val speed: Double
+
     val soundRange: Double
     val soundReloadStart: SoundInfo
     val soundReloadFinish: SoundInfo
@@ -49,6 +51,8 @@ data class TestBlasterBalancing(
     override val longRangeDistanceThreshold: Double = 40.0,
     override val headshotMultiplier: Double = 1.5,
     override val spreadDegrees: Double = 5.0,
+
+    override val speed: Double = 10.0,
 
     override val soundRange: Double = 1.0,
     override val soundReloadStart: SoundInfo = SoundInfo("horizonsend:blaster.rifle.reload.start", volume = 1f, source = Sound.Source.PLAYER),

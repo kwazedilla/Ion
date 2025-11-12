@@ -14,6 +14,7 @@ import net.horizonsend.ion.server.features.custom.items.util.ItemFactory
 import net.horizonsend.ion.server.miscellaneous.utils.updateData
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.Component
+import org.bukkit.Particle
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -59,20 +60,12 @@ abstract class NewBlaster<T : NewBlasterBalancing>(
             location.direction.rotateAroundX(radians).rotateAroundY(radians).rotateAroundZ(radians)
         }
 
-        /*
-        RayTracedParticleProjectile(
-            location,
-            livingEntity,
-            balancing,
-            DUST,
-            balancing.explosiveShot,
-            DustOptions(
-                getParticleColor(livingEntity),
-                balancing.particleSize
-            ),
-            balancing.soundWhizz,
+        NewBlasterProjectile(
+            location = location,
+            shooter = livingEntity,
+            balancing = balancing,
+            particle = Particle.DUST
         ).fire()
-         */
     }
 
     open fun reload(livingEntity: LivingEntity, blasterItem: ItemStack) {
