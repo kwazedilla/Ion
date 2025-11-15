@@ -1,11 +1,16 @@
 package net.horizonsend.ion.server.features.custom.items.type.weapon.blaster
 
+import net.horizonsend.ion.server.IonServer
 import net.horizonsend.ion.server.configuration.NewBlasterBalancing
-import net.horizonsend.ion.server.miscellaneous.utils.Tasks
+import net.horizonsend.ion.server.miscellaneous.utils.runnable
+import org.bukkit.FluidCollisionMode
 import org.bukkit.Location
 import org.bukkit.Particle
+import org.bukkit.entity.Damageable
 import org.bukkit.entity.Entity
+import org.bukkit.entity.LivingEntity
 import java.util.concurrent.TimeUnit
+import kotlin.math.min
 
 class NewBlasterProjectile(
     val location: Location,
@@ -17,18 +22,63 @@ class NewBlasterProjectile(
     var lastTick: Long = 0
     var delta: Double = 0.0
 
+    companion object {
+        const val CHECK_INCREMENT = 0.1
+    }
+
     fun fire() {
         lastTick = System.nanoTime()
 
-        Tasks.syncRepeat(0L, 1L) {
-            tick()
-        }
+        runnable {
+            if (tick()) cancel()
+        }.runTaskTimer(IonServer, 0L, 1L)
     }
 
-    fun tick() {
+    fun tick(): Boolean {
+        if (!location.isChunkLoaded) return true
+
         delta = (System.nanoTime() - lastTick) / TimeUnit.SECONDS.toNanos(1).toDouble()
+        var distanceToTravelThisTick = delta * balancing.speed
+
+        while (distanceToTravelThisTick > 0) {
+            val distanceIncrement = min(CHECK_INCREMENT, distanceToTravelThisTick)
+
+            val rayTraceResult = location.world.rayTrace(
+                location,
+                location.direction.clone().normalize(),
+                distanceIncrement,
+                FluidCollisionMode.NEVER,
+                true,
+                balancing.projectileSize
+            ) { player -> player != shooter }
+
+            val hitBlock = rayTraceResult?.hitBlock
+            if (hitBlock != null) {
+                return true
+            }
+
+            val hitEntity = rayTraceResult?.hitEntity
+            if (hitEntity != null && hitEntity is Damageable) {
+                var hasHeadshot = false
+                val hitPosition = rayTraceResult.hitPosition
+
+                if (hitEntity is LivingEntity) {
+                    if (balancing.headshotMultiplier > 0 && (hitEntity.eyeLocation.y - hitPosition.y) < (.3 * balancing.projectileSize)) {
+                        hasHeadshot = true
+                    }
+                }
+
+                return true
+            }
+
+            location.add(location.direction.clone().normalize().multiply(distanceIncrement))
+
+            distanceToTravelThisTick -= distanceIncrement
+        }
 
         lastTick = System.nanoTime()
         ticks++
+
+        return false
     }
 }
