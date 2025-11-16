@@ -1,6 +1,7 @@
 package net.horizonsend.ion.server.features.custom.items.component
 
 import io.papermc.paper.event.block.BlockPreDispenseEvent
+import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
 import net.horizonsend.ion.server.features.custom.items.component.CustomItemComponentManager.ComponentType
 import net.horizonsend.ion.server.features.custom.items.component.CustomItemComponentManager.ComponentTypeData
 import net.horizonsend.ion.server.features.custom.items.component.CustomItemComponentManager.ComponentTypeData.AllowMultiple
@@ -90,6 +91,11 @@ class CustomComponentTypes<T : CustomItemComponent, Z : ComponentTypeData<T>> pr
 		 * General interact listener
 		 **/
 		val LISTENER_ENTITY_SHOOT_BOW = newComponentType<Listener<EntityShootBowEvent, *>, AllowMultiple<Listener<EntityShootBowEvent, *>>>(ComponentType.ALLOW_MULTIPLE)
+
+		/**
+		 * Called when someone loads a crossbow
+		 */
+		val LISTENER_ENTITY_LOAD_CROSSBOW = newComponentType<Listener<EntityLoadCrossbowEvent, *>, AllowMultiple<Listener<EntityLoadCrossbowEvent, *>>>(ComponentType.ALLOW_MULTIPLE)
 
 		/**
 		 * Recieves ticks, when held by a player

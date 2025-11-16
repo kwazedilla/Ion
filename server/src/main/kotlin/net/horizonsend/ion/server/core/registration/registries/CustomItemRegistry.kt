@@ -217,7 +217,7 @@ class CustomItemRegistry : Registry<CustomItem>(RegistryKeys.CUSTOM_ITEMS) {
 				key = CustomItemKeys.TEST_BLASTER,
 				displayName = Component.text("Test Blaster"),
 				modLimit = 1,
-				itemFactory = ItemFactory.Preset.builder().setMaterial(Material.IRON_HOE).setCustomModel("weapon/blaster/rifle").build(),
+				itemFactory = ItemFactory.Preset.builder().setMaterial(Material.CROSSBOW).setCustomModel("weapon/blaster/rifle") .build(),
 				model = "weapon/blaster/rifle",
 				balancingSupplier = ConfigurationFiles.newBlasterBalancing().blasterBalancing::testBlaster
 			)

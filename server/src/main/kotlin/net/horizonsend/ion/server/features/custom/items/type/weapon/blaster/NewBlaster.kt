@@ -1,12 +1,16 @@
 package net.horizonsend.ion.server.features.custom.items.type.weapon.blaster
 
 import io.papermc.paper.datacomponent.DataComponentTypes
+import io.papermc.paper.datacomponent.item.ChargedProjectiles
 import io.papermc.paper.datacomponent.item.ItemAttributeModifiers
+import net.horizonsend.ion.common.utils.miscellaneous.randomDouble
 import net.horizonsend.ion.server.configuration.NewBlasterBalancing
 import net.horizonsend.ion.server.core.registration.IonRegistryKey
 import net.horizonsend.ion.server.features.custom.items.CustomItem
 import net.horizonsend.ion.server.features.custom.items.component.CustomComponentTypes
 import net.horizonsend.ion.server.features.custom.items.component.CustomItemComponentManager
+import net.horizonsend.ion.server.features.custom.items.component.Listener.Companion.entityLoadCrossbowListener
+import net.horizonsend.ion.server.features.custom.items.component.Listener.Companion.leftClickListener
 import net.horizonsend.ion.server.features.custom.items.component.Listener.Companion.playerSwapHandsListener
 import net.horizonsend.ion.server.features.custom.items.component.Listener.Companion.rightClickListener
 import net.horizonsend.ion.server.features.custom.items.component.ModManager
@@ -14,6 +18,7 @@ import net.horizonsend.ion.server.features.custom.items.util.ItemFactory
 import net.horizonsend.ion.server.miscellaneous.utils.updateData
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.Component
+import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
@@ -34,11 +39,20 @@ abstract class NewBlaster<T : NewBlasterBalancing>(
         addComponent(CustomComponentTypes.MOD_MANAGER, ModManager(modLimit))
 
         addComponent(CustomComponentTypes.LISTENER_PLAYER_INTERACT, rightClickListener(this@NewBlaster) { event, _, item ->
+            event.isCancelled = true
             fire(event.player, item)
+        })
+
+        addComponent(CustomComponentTypes.LISTENER_PLAYER_INTERACT, leftClickListener(this@NewBlaster) { event, _, item ->
+            event.isCancelled = true
         })
 
         addComponent(CustomComponentTypes.LISTENER_PLAYER_SWAP_HANDS, playerSwapHandsListener(this@NewBlaster) { event, _, item ->
             reload(event.player, item)
+        })
+
+        addComponent(CustomComponentTypes.LISTENER_ENTITY_LOAD_CROSSBOW, entityLoadCrossbowListener(this@NewBlaster) { event, _, item ->
+            event.isCancelled = true
         })
     }
 
@@ -57,7 +71,10 @@ abstract class NewBlaster<T : NewBlasterBalancing>(
 
         if (balancing.spreadDegrees > 0) {
             val radians = balancing.spreadDegrees * Math.PI / 180
-            location.direction.rotateAroundX(radians).rotateAroundY(radians).rotateAroundZ(radians)
+            location.direction = location.direction
+                .rotateAroundX(randomDouble(-radians, radians))
+                .rotateAroundY(randomDouble(-radians, radians))
+                .rotateAroundZ(randomDouble(-radians, radians))
         }
 
         NewBlasterProjectile(
@@ -75,6 +92,7 @@ abstract class NewBlaster<T : NewBlasterBalancing>(
     override fun decorateItemStack(base: ItemStack) {
         // Clear base item attributes
         base.updateData(DataComponentTypes.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.itemAttributes().build())
+        base.updateData(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectiles.chargedProjectiles().add(ItemStack(Material.ARROW)).build())
     }
 
     abstract fun sendActionBar(audience: Audience)

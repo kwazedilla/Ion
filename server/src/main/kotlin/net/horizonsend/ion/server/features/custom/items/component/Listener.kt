@@ -1,6 +1,7 @@
 package net.horizonsend.ion.server.features.custom.items.component
 
 import io.papermc.paper.event.block.BlockPreDispenseEvent
+import io.papermc.paper.event.entity.EntityLoadCrossbowEvent
 import net.horizonsend.ion.server.core.registration.registries.CustomItemRegistry.Companion.customItem
 import net.horizonsend.ion.server.features.custom.items.CustomItem
 import net.horizonsend.ion.server.features.custom.items.attribute.CustomItemAttribute
@@ -118,5 +119,10 @@ class Listener<E: Event, T: CustomItem>(
 			},
 			eventReceiver =  handleEvent
 		)
+
+		inline fun <reified T: CustomItem> entityLoadCrossbowListener(
+			customItem: T,
+			noinline handleEvent: (EntityLoadCrossbowEvent, T, ItemStack) -> Unit
+		): Listener<EntityLoadCrossbowEvent, T> = Listener(customItem, EntityLoadCrossbowEvent::class, eventReceiver =  handleEvent)
 	}
 }

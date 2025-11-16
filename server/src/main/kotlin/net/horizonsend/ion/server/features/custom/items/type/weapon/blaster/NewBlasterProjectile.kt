@@ -3,6 +3,7 @@ package net.horizonsend.ion.server.features.custom.items.type.weapon.blaster
 import net.horizonsend.ion.server.IonServer
 import net.horizonsend.ion.server.configuration.NewBlasterBalancing
 import net.horizonsend.ion.server.miscellaneous.utils.runnable
+import org.bukkit.Color
 import org.bukkit.FluidCollisionMode
 import org.bukkit.Location
 import org.bukkit.Particle
@@ -21,6 +22,8 @@ class NewBlasterProjectile(
     var ticks: Int = 0
     var lastTick: Long = 0
     var delta: Double = 0.0
+    var distanceTravelled: Double = 0.0
+    val dustOptions = Particle.DustOptions(Color.RED, balancing.visualProjectileSize)
 
     companion object {
         const val CHECK_INCREMENT = 0.1
@@ -73,7 +76,13 @@ class NewBlasterProjectile(
 
             location.add(location.direction.clone().normalize().multiply(distanceIncrement))
 
+            location.world.spawnParticle(Particle.DUST, location, 1, 0.0, 0.0, 0.0, 0.0, dustOptions, true)
+
             distanceToTravelThisTick -= distanceIncrement
+            distanceTravelled += distanceIncrement
+
+            // projectile has traveled to its max range
+            if (distanceTravelled >= balancing.maxRange) return true
         }
 
         lastTick = System.nanoTime()
