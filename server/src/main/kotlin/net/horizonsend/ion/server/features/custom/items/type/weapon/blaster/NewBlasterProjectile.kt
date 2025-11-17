@@ -10,6 +10,7 @@ import org.bukkit.Particle
 import org.bukkit.entity.Damageable
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
+import org.bukkit.util.Vector
 import java.util.concurrent.TimeUnit
 import kotlin.math.min
 
@@ -24,6 +25,7 @@ class NewBlasterProjectile(
     var delta: Double = 0.0
     var distanceTravelled: Double = 0.0
     val dustOptions = Particle.DustOptions(Color.RED, balancing.visualProjectileSize)
+    var dropVelocity: Double = 0.0
 
     companion object {
         const val CHECK_INCREMENT = 0.1
@@ -41,10 +43,19 @@ class NewBlasterProjectile(
         if (!location.isChunkLoaded) return true
 
         delta = (System.nanoTime() - lastTick) / TimeUnit.SECONDS.toNanos(1).toDouble()
-        var distanceToTravelThisTick = delta * balancing.speed
+        val distanceToTravelThisTick = delta * balancing.speed
+        var remainingDistanceToTravelThisTick = distanceToTravelThisTick
+        val velocityToDropThisTick = delta * balancing.projectileDropAccel
+        //var remainingDistanceToDropThisTick = distanceToDropThisTick
 
-        while (distanceToTravelThisTick > 0) {
-            val distanceIncrement = min(CHECK_INCREMENT, distanceToTravelThisTick)
+        while (remainingDistanceToTravelThisTick > 0) {
+            // calculate distance to travel during this "micro tick". the max distance in this micro tick is CHECK_INCREMENT
+            val distanceIncrement = min(CHECK_INCREMENT, remainingDistanceToTravelThisTick)
+            // calculate the change in velocity during the micro tick; uses the ratio between the distance traveled between the micro tick and the total distance to travel during this tick
+            val dropVelocityIncrement = velocityToDropThisTick * distanceIncrement / distanceToTravelThisTick
+            dropVelocity -= dropVelocityIncrement
+            // calculate the change in position due to drop during the micro tick
+            val dropPositionIncrement = dropVelocity * delta * (distanceIncrement / distanceToTravelThisTick)
 
             val rayTraceResult = location.world.rayTrace(
                 location,
@@ -74,11 +85,13 @@ class NewBlasterProjectile(
                 return true
             }
 
-            location.add(location.direction.clone().normalize().multiply(distanceIncrement))
+            val newLocationDelta = location.direction.clone().normalize().multiply(distanceIncrement)
+            newLocationDelta.add(Vector(0.0, dropPositionIncrement, 0.0)).normalize().multiply(distanceIncrement)
+            location.add(newLocationDelta)
 
             location.world.spawnParticle(Particle.DUST, location, 1, 0.0, 0.0, 0.0, 0.0, dustOptions, true)
 
-            distanceToTravelThisTick -= distanceIncrement
+            remainingDistanceToTravelThisTick -= distanceIncrement
             distanceTravelled += distanceIncrement
 
             // projectile has traveled to its max range
