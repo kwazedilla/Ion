@@ -23,11 +23,9 @@ sealed interface NewBlasterBalancing {
     val headshotMultiplier: Double
     val spreadDegrees: Double
 
-    val speed: Double
     val projectileSize: Double
     val visualProjectileSize: Float
     val maxRange: Double
-    val projectileDropAccel: Double
 
     val soundRange: Double
     val soundReloadStart: SoundInfo
@@ -38,13 +36,16 @@ sealed interface NewBlasterBalancing {
 }
 
 @Serializable
-sealed interface ProjectileBlasterBalancing : NewBlasterBalancing {
-}
-
-@Serializable
 sealed interface AmmoStoringBlasterBalancing: NewBlasterBalancing {
     val capacity: Int
     val displayDurability: Boolean
+    val consumesAmmo: Boolean
+}
+
+@Serializable
+sealed interface ProjectileBlasterBalancing : NewBlasterBalancing, AmmoStoringBlasterBalancing {
+    val speed: Double
+    val projectileDropAccel: Double
 }
 
 @Serializable
@@ -56,11 +57,9 @@ data class TestBlasterBalancing(
     override val headshotMultiplier: Double = 1.5,
     override val spreadDegrees: Double = 5.0,
 
-    override val speed: Double = 375.0,
     override val projectileSize: Double = 0.5,
     override val visualProjectileSize: Float = 0.25f,
     override val maxRange: Double = 500.0,
-    override val projectileDropAccel: Double = 10.0,
 
     override val soundRange: Double = 1.0,
     override val soundReloadStart: SoundInfo = SoundInfo("horizonsend:blaster.rifle.reload.start", volume = 1f, source = Sound.Source.PLAYER),
@@ -69,6 +68,10 @@ data class TestBlasterBalancing(
     override val soundWhizz: SoundInfo = SoundInfo("horizonsend:blaster.whizz.standard", volume = 1f, source = Sound.Source.PLAYER),
     override val soundShell: SoundInfo = SoundInfo("horizonsend:blaster.rifle.shell", volume = 1f, source = Sound.Source.PLAYER),
 
+    override val speed: Double = 375.0,
+    override val projectileDropAccel: Double = 10.0,
+
     override val capacity: Int = 30,
-    override val displayDurability: Boolean = true
-) : ProjectileBlasterBalancing, AmmoStoringBlasterBalancing
+    override val displayDurability: Boolean = true,
+    override val consumesAmmo: Boolean = true
+) : ProjectileBlasterBalancing

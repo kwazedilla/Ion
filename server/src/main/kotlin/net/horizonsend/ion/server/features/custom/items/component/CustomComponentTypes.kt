@@ -38,6 +38,11 @@ class CustomComponentTypes<T : CustomItemComponent, Z : ComponentTypeData<T>> pr
 		val AMMUNITION_STORAGE = newComponentType<AmmunitionStorage, OnlyOne<AmmunitionStorage>>(ComponentType.ONLY_ONE)
 
 		/**
+		 * Allows an item to store ammunition.
+		 **/
+		val NEW_AMMUNITION_STORAGE = newComponentType<NewAmmunitionStorage, OnlyOne<NewAmmunitionStorage>>(ComponentType.ONLY_ONE)
+
+		/**
 		 * Allows an item to store power
 		 **/
 		val POWER_STORAGE = newComponentType<PowerStorage, OnlyOne<PowerStorage>>(ComponentType.ONLY_ONE)
