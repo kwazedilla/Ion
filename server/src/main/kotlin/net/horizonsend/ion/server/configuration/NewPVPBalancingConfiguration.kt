@@ -23,9 +23,11 @@ sealed interface NewBlasterBalancing {
     val headshotMultiplier: Double
     val spreadDegrees: Double
 
+    val speed: Double
     val projectileSize: Double
     val visualProjectileSize: Float
     val maxRange: Double
+    val projectileDropAccel: Double
 
     val soundRange: Double
     val soundReloadStart: SoundInfo
@@ -36,17 +38,13 @@ sealed interface NewBlasterBalancing {
 }
 
 @Serializable
-sealed interface AmmoStoringBlasterBalancing: NewBlasterBalancing {
+sealed interface AmmoStoringBlasterBalancing {
     val capacity: Int
     val displayDurability: Boolean
     val consumesAmmo: Boolean
 }
 
-@Serializable
-sealed interface ProjectileBlasterBalancing : NewBlasterBalancing, AmmoStoringBlasterBalancing {
-    val speed: Double
-    val projectileDropAccel: Double
-}
+sealed interface ProjectileBlasterBalancing: NewBlasterBalancing, AmmoStoringBlasterBalancing
 
 @Serializable
 data class TestBlasterBalancing(
