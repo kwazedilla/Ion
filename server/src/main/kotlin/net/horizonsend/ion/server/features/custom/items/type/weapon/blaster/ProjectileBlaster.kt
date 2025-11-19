@@ -8,7 +8,12 @@ import net.horizonsend.ion.server.features.custom.items.component.CustomItemComp
 import net.horizonsend.ion.server.features.custom.items.component.NewAmmunitionStorage
 import net.horizonsend.ion.server.features.custom.items.util.ItemFactory
 import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.key.Key.key
+import net.kyori.adventure.sound.Sound.Source.PLAYER
+import net.kyori.adventure.sound.Sound.sound
 import net.kyori.adventure.text.Component
+import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.util.function.Supplier
 
@@ -31,10 +36,29 @@ open class ProjectileBlaster(
 
     override fun decorateItemStack(base: ItemStack) {
         super.decorateItemStack(base)
-        //ammoComponent.setAmmo(base, this, balancing.capacity)
+        ammoComponent.setAmmo(base, this, balancing.capacity)
     }
 
     override fun sendActionBar(audience: Audience) {
         TODO("Not yet implemented")
+    }
+
+    override fun fire(shooter: LivingEntity, blasterItem: ItemStack) {
+        if (shooter is Player) {
+            if (!removeAmmo(blasterItem, shooter)) return
+
+            super.fire(shooter, blasterItem)
+        }
+    }
+
+    private fun removeAmmo(itemStack: ItemStack, livingEntity: LivingEntity, amount: Int = 1): Boolean {
+        val ammo = ammoComponent.getAmmo(itemStack)
+        if (amount > ammo) {
+            livingEntity.playSound(sound(key("horizonsend:blaster.dry_shoot"), PLAYER, 1.0f, 1.0f))
+            return false
+        }
+
+        ammoComponent.setAmmo(itemStack, this, ammo - amount)
+        return true
     }
 }

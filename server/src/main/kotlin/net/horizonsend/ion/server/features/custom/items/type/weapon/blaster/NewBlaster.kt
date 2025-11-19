@@ -57,10 +57,6 @@ abstract class NewBlaster<T : NewBlasterBalancing>(
     }
 
     open fun fire(shooter: LivingEntity, blasterItem: ItemStack) {
-        if (shooter is Player) {
-
-        }
-
         fireProjectiles(shooter)
     }
 
