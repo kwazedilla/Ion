@@ -44,6 +44,12 @@ sealed interface AmmoStoringBlasterBalancing {
     val consumesAmmo: Boolean
 }
 
+@Serializable
+sealed interface AutomaticFiringBlasterBalancing {
+    val automaticFireRatePerSecond: Double
+}
+
+@Serializable
 sealed interface ProjectileBlasterBalancing: NewBlasterBalancing, AmmoStoringBlasterBalancing
 
 @Serializable
@@ -54,6 +60,7 @@ data class TestBlasterBalancing(
     override val longRangeDistanceThreshold: Double = 40.0,
     override val headshotMultiplier: Double = 1.5,
     override val spreadDegrees: Double = 5.0,
+    override val automaticFireRatePerSecond: Double = 15.0,
 
     override val projectileSize: Double = 0.5,
     override val visualProjectileSize: Float = 0.25f,
@@ -71,5 +78,5 @@ data class TestBlasterBalancing(
 
     override val capacity: Int = 30,
     override val displayDurability: Boolean = true,
-    override val consumesAmmo: Boolean = true
-) : ProjectileBlasterBalancing
+    override val consumesAmmo: Boolean = true,
+) : ProjectileBlasterBalancing, AutomaticFiringBlasterBalancing

@@ -16,6 +16,7 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.util.function.Supplier
+import kotlin.math.min
 
 open class ProjectileBlaster(
     key: IonRegistryKey<CustomItem, out CustomItem>,
@@ -43,11 +44,12 @@ open class ProjectileBlaster(
         TODO("Not yet implemented")
     }
 
-    override fun fire(shooter: LivingEntity, blasterItem: ItemStack) {
+    override fun fire(shooter: LivingEntity, blasterItem: ItemStack, maxProjectiles: Int) {
         if (shooter is Player) {
-            if (!removeAmmo(blasterItem, shooter)) return
+            val ammoToConsume = min(getNumProjectilesToFireNextTick(), ammoComponent.getAmmo(blasterItem))
+            if (!removeAmmo(blasterItem, shooter, ammoToConsume)) return
 
-            super.fire(shooter, blasterItem)
+            super.fire(shooter, blasterItem, ammoToConsume)
         }
     }
 
