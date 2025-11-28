@@ -23,6 +23,7 @@ import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.util.function.Supplier
 import kotlin.math.floor
@@ -61,8 +62,13 @@ abstract class NewBlaster<T : NewBlasterBalancing>(
     }
 
     open fun fire(shooter: LivingEntity, blasterItem: ItemStack, maxProjectiles: Int = Int.MAX_VALUE) {
+        if (shooter is Player && shooter.hasCooldown(blasterItem)) return
+
         if (balancing is AutomaticFiringBlasterBalancing) {
             fireAutomaticProjectiles(shooter, maxProjectiles)
+            if (shooter is Player) {
+                shooter.setCooldown(blasterItem, 4)
+            }
         }
     }
 

@@ -45,17 +45,20 @@ open class ProjectileBlaster(
     }
 
     override fun fire(shooter: LivingEntity, blasterItem: ItemStack, maxProjectiles: Int) {
-        if (shooter is Player) {
-            val ammoToConsume = min(getNumProjectilesToFireNextTick(), ammoComponent.getAmmo(blasterItem))
-            if (!removeAmmo(blasterItem, shooter, ammoToConsume)) return
+        if (shooter is Player && shooter.hasCooldown(blasterItem)) return
 
-            super.fire(shooter, blasterItem, ammoToConsume)
+        val ammoToConsume = min(getNumProjectilesToFireNextTick(), ammoComponent.getAmmo(blasterItem))
+
+        if (shooter is Player) {
+            if (!removeAmmo(blasterItem, shooter, ammoToConsume)) return
         }
+
+        super.fire(shooter, blasterItem, ammoToConsume)
     }
 
     private fun removeAmmo(itemStack: ItemStack, livingEntity: LivingEntity, amount: Int = 1): Boolean {
         val ammo = ammoComponent.getAmmo(itemStack)
-        if (amount > ammo) {
+        if (amount > ammo || ammo <= 0) {
             livingEntity.playSound(sound(key("horizonsend:blaster.dry_shoot"), PLAYER, 1.0f, 1.0f))
             return false
         }
